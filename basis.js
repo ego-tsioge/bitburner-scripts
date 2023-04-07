@@ -85,8 +85,7 @@ export async function main(ns) {
     ns.print("Penetrating ", server);
     for (let fileName of cracks) {
       if (ns.fileExists(fileName[0], homeServer)) {
-        let runScript = fileName[1];
-        runScript(server);
+        fileName[1](server);
       }
     }
   }
