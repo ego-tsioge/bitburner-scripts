@@ -1,6 +1,11 @@
+/* shamless copied from alainbryden
+https://github.com/alainbryden/bitburner-scripts
+
+*/
+
 let options;
 const argsSchema = [
-    ['github', 'alainbryden'],
+    ['github', 'ego-tsioge'],
     ['repository', 'bitburner-scripts'],
     ['branch', 'main'],
     ['download', []], // By default, all supported files in the repository will be downloaded. Override with just a subset of files here
@@ -9,14 +14,6 @@ const argsSchema = [
     ['extension', ['.js', '.ns', '.txt', '.script']], // Files to download by extension
     ['omit-folder', ['/Temp/']], // Folders to omit
 ];
-
-export function autocomplete(data, args) {
-    data.flags(argsSchema);
-    const lastFlag = args.length > 1 ? args[args.length - 2] : null;
-    if (["--download", "--subfolder", "--omit-folder"].includes(lastFlag))
-        return data.scripts;
-    return [];
-}
 
 /** @param {NS} ns 
  * Will try to download a fresh version of every file on the current server.
