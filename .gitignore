@@ -1,3 +1,5 @@
 # gitignoretest
 .DS_Store
 *sublime*
+./spicken/
+spicken/
