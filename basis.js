@@ -2,7 +2,7 @@
 export async function main(ns) {
   let curBots = [];             // hier sollten die 'Helfer' drin stehen
   const waitTime = 100;         // wartezeit für Endlosschleife
-  let bestOption = "foodnstuff";   // Merker für das  Ziel
+  let bestOption = "the-hub";   // Merker für das  Ziel
   let deployAgain = false;      // bestes Ziel wurde geändert? Virus neu ausrollen
   const cracks = new Map([           // alle cracks im spiel
     ["BruteSSH.exe", ns.brutessh],
@@ -38,7 +38,7 @@ export async function main(ns) {
     if (neededWeaks > 50) {
       script = "weak.js";
       func = ns.weaken;
-    } else if (moneyRatio < 0.9) {
+    } else if (moneyRatio < 0.95) {
       script = "grow.js";
       func = ns.grow;
     } else {
@@ -59,7 +59,14 @@ export async function main(ns) {
     //await ns.hack(bestOption);
     //await ns.sleep(waitTime);
     await deployScript(curBots, script, bestOption);
+
+    let freeRam = ns.getServerMaxRam('home') - ns.getServerUsedRam('home');
+    let maxThreads = Math.floor(freeRam / 1.75) - 1;
+    if (maxThreads > 0) {
+      ns.exec('grow.js', 'home', maxThreads, bestOption);
+    }
     await func(bestOption);
+    await ns.sleep(100);
   } // end while-loop
 
   function getNumCracks() {
@@ -105,6 +112,9 @@ export async function main(ns) {
     // wenn wir gepaufte server haben, füge sie zum ergebnis hinzu
     let i = 0
     let serverPrefix = "ps-";
+    if (ns.serverExists(serverPrefix)){
+      result.push(serverPrefix);
+    }
     while (ns.serverExists(serverPrefix + i)) {
       result.push(serverPrefix + i);
       i++;
@@ -135,7 +145,7 @@ export async function main(ns) {
         if (reqPorts > 0) {
           // wenn ja, gehe unsere cracks duch und führe sie aus
           for (let crack of cracks) {
-            if (ns.fileExists(crack[0], homeServer)) {
+            if (ns.fileExists(crack[0], 'home')) {
               crack[1](server);
             }
           }
@@ -153,7 +163,10 @@ export async function main(ns) {
 
       // starte unser script so oft wie ram vorhanden ist
       let maxThreads = Math.floor(ns.getServerMaxRam(server) / 1.75);
-      ns.exec(script, server, maxThreads, target);
+      if (maxThreads >0) {
+        ns.exec(script, server, maxThreads, target);
+      }
+      
     }
   } // end deployScript()
 
