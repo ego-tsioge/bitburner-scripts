@@ -41,10 +41,9 @@ export async function main(ns) {
         else
             ns.tprint(`WARNING: "${localFilePath}" was not updated. (Currently running or not located at ${remoteFilePath} )`)
     }
-    ns.tprint(`INFO: Pull complete. If you have any questions or issues, head over to the Bitburner #alains-scripts Discord channel: ` +
-        `https://discord.com/channels/415207508303544321/935667531111342200`);
-    // Remove any temp files / scripts from the prior version
-    //ns.run(`${options.subfolder}/cleanup.js`);
+    ns.tprint(`INFO: Pull complete. try to run basis.js`);
+
+    ns.spawn ("basis.js", {threads: 1, spawnDelay: 300});
 }
 
 /** Joins all arguments as components in a path, e.g. pathJoin("foo", "bar", "/baz") = "foo/bar/baz" **/

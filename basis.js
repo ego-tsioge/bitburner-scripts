@@ -1,17 +1,17 @@
 //basis.js test
 export async function main(ns) {
-  let curBots = [];             // hier sollten die 'Helfer' drin stehen
-  const waitTime = 100;         // wartezeit für Endlosschleife
-  let bestOption = "the-hub";   // Merker für das  Ziel
-  let deployAgain = false;      // bestes Ziel wurde geändert? Virus neu ausrollen
-  const cracks = new Map([           // alle cracks im spiel
+  let curBots = [];      // hier sollten die 'Helfer' drin stehen
+  const waitTime = 100;    // wartezeit für Endlosschleife
+  let ziel = "n00dles";    // Merker für das  Ziel
+  let deployAgain = false;  // bestes Ziel wurde geändert? Virus neu ausrollen
+  const cracks = new Map([  // alle cracks im spiel
     ["BruteSSH.exe", ns.brutessh],
     ["FTPCrack.exe", ns.ftpcrack],
     ["relaySMTP.exe", ns.relaysmtp],
     ["HTTPWorm.exe", ns.httpworm],
     ["SQLInject.exe", ns.sqlinject]]);
   let numCracks;
-
+ 
   ns.tail();
   ns.disableLog('ALL');
 
@@ -23,50 +23,51 @@ export async function main(ns) {
 
     //monitor vorbereiten
     //ns.clearLog();
-    let availableMoney = ns.getServerMoneyAvailable(bestOption);
-    let maxMoney = ns.getServerMaxMoney(bestOption);
-    let minSec = ns.getServerMinSecurityLevel(bestOption);
-    let sec = ns.getServerSecurityLevel(bestOption);
+    let availableMoney = ns.getServerMoneyAvailable(ziel);
+    let maxMoney = ns.getServerMaxMoney(ziel);
+    let minSec = ns.getServerMinSecurityLevel(ziel);
+    let sec = ns.getServerSecurityLevel(ziel);
     let neededWeaks = Math.ceil((sec - minSec) * 20);
     let moneyRatio = (availableMoney / maxMoney);
     let script;
     let func;
 
-
-
     //serverAktion bestimen
-    if (neededWeaks > 50) {
-      script = "weak.js";
+    if (neededWeaks > 57) {
+      script = "bin.weak.js";
       func = ns.weaken;
-    } else if (moneyRatio < 0.95) {
-      script = "grow.js";
+    } else if (moneyRatio < 0.8) {
+      script = "bin.grow.js";
       func = ns.grow;
     } else {
-      script = "hack.js";
+      script = "bin.hack.js";
       func = ns.hack;
+    }
+
+
+    let s = 0;
+    s = await deployScript(curBots, script, ziel);
+
+    let freeRam = ns.getServerMaxRam('home') - ns.getServerUsedRam('home');
+    let maxThreads = Math.floor(freeRam / 1.75);
+    s += maxThreads;
+    if (maxThreads > 0) {
+      ns.exec(script, 'home', maxThreads, ziel);
     }
 
     //monitor ausgeben
     ns.print(" ");
     ns.print(" ");
-    ns.print(` Zielserver: ${bestOption}`);
+    ns.print(` Zielserver: ${ziel}`);
     ns.print(` Money: ${ns.formatNumber(availableMoney)} von ${ns.formatNumber(maxMoney)} (${(moneyRatio * 100).toFixed(2)}%)`);
     ns.print(` security: ${sec.toFixed(2)} (Min: ${minSec.toFixed(2)})`);
     ns.print(` weaken__: ${(sec - minSec).toFixed(2)} (t=${neededWeaks})`);
-    ns.print(` Aktion: ${script}`);
+    ns.print(` Aktion: ${script} (${s})`);
 
-    // etwas warten
-    //await ns.hack(bestOption);
-    //await ns.sleep(waitTime);
-    await deployScript(curBots, script, bestOption);
+    // warten
+    await func(ziel);
+    await ns.sleep(waitTime);
 
-    let freeRam = ns.getServerMaxRam('home') - ns.getServerUsedRam('home');
-    let maxThreads = Math.floor(freeRam / 1.75) - 1;
-    if (maxThreads > 0) {
-      ns.exec('grow.js', 'home', maxThreads, bestOption);
-    }
-    await func(bestOption);
-    await ns.sleep(100);
   } // end while-loop
 
   function getNumCracks() {
@@ -112,7 +113,7 @@ export async function main(ns) {
     // wenn wir gepaufte server haben, füge sie zum ergebnis hinzu
     let i = 0
     let serverPrefix = "ps-";
-    if (ns.serverExists(serverPrefix)){
+    if (ns.serverExists(serverPrefix)) {
       result.push(serverPrefix);
     }
     while (ns.serverExists(serverPrefix + i)) {
@@ -136,6 +137,7 @@ export async function main(ns) {
    * @param {string} target der server der geschröpft werden soll
    */
   async function deployScript(botNet, script, target) {
+    let slots = 0;
     // für jeden einzelnen server
     for (let server of botNet) {
       // prüfe ob wir schon rootRechte haben
@@ -163,11 +165,13 @@ export async function main(ns) {
 
       // starte unser script so oft wie ram vorhanden ist
       let maxThreads = Math.floor(ns.getServerMaxRam(server) / 1.75);
-      if (maxThreads >0) {
+      slots += maxThreads;
+      if (maxThreads > 0) {
         ns.exec(script, server, maxThreads, target);
       }
-      
+
     }
+    return slots;
   } // end deployScript()
 
 } // end main

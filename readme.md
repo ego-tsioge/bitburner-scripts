@@ -1,15 +1,20 @@
 [for English text, see below]
 # egos Bitburner Fortschritt
 
-Willkommen auf meiner Spielwiese mit Bitburner-Skripten. Sie sind in der spielinternen Sprache Netscript geschrieben, die eine Untermenge von Javascript ist. 
+Willkommen auf meiner Spielwiese mit Bitburner-Skripten. Sie sind in der spielinternen Sprache Netscript geschrieben, was quasi JavaScript entspricht.
 
-Dieses Repro dient hauptsächlich dazu, meine Fortschritte festzuhalten und beim nächsten Neustart die Skripte automatisch parat zu haben.
+Dieses Repro dient hauptsächlich dazu, meine Fortschritte festzuhalten und nach einer längeren Pause im Spiel die Skripte automatisch parat zu haben.
 
-Wenn Sie das Spiel selbst mal ausprobieren möchten, klicken Sie bitte auf einen der folgenden Links.
-[Bitburner (Github)](https://danielyxie.github.io/bitburner/) 
-[Bitburner (Steam)](https://store.steampowered.com/app/1812820/Bitburner/)
+Wenn du das Spiel selbst ausprobieren willst, dann klicke auf einen der folgenden Links.
+- [Bitburner (Github)](https://danielyxie.github.io/bitburner/) 
+- [Bitburner (Steam)](https://store.steampowered.com/app/1812820/Bitburner/)
 
-Wichtige Anmerkung: Was Sie hier sehen, ist größtenteils von anderen kopiert.
+Wichtige Anmerkung: Was du hier siehst, ist größtenteils von anderen kopiert. Inspirationen gab es bei:
+- https://github.com/jenheilemann/bitburner-scripts/blob/main/README.md
+- https://www.youtube.com/watch?v=85-A4rOJr5A&list=PLbUKWaoZ7R0gWs0RBUUAzpXH_D8QKT1Fs&index=9
+- https://www.reddit.com/r/Bitburner/
+- https://quacksouls.github.io/lyf/hello_README/
+- https://bitburner.readthedocs.io/en/stable/ (achtung! das ist die alte Spieldokumentation, aber dinge wie )
 
 ## Anforderungen
 
@@ -17,15 +22,13 @@ Mein Skript sollte mit den 8 GB RAM, die man beim Spielstart hat, laufen können
 
 ## Installation
 
-1. Laden Sie das Skript namens `git-init.js` von GitHub, indem Sie die folgende Zeile im Bitburner Terminal ausführen:
+1. Lade das Skript namens `git-init.js` von GitHub, indem du folgende Zeile im Bitburner Terminal ausführst:
 
-`wget https://raw.githubusercontent.com/ego-tsioge/bitburner-scripts/main/git-init.js git-init.js`
-
-2. Starten Sie dann das Skript mit `run git-init.js`. 
+`wget https://raw.githubusercontent.com/ego-tsioge/bitburner-scripts/main/git-init.js git-init.js; run git-init.js`
 
 Dieses Skript lädt automatisch dieses Repro auf den Home Server (im Spiel).
 
-3. Mit `run go.js` werden die ersten Server infiziert (Geld verdient) und der Hacking-Skill trainiert.
+2. Mit `run go.js` werden die ersten Server infiziert (Geld verdient) und der Hacking-Skill trainiert. 
 
 
 # Persönliche Notizen
