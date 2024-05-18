@@ -5,7 +5,12 @@
  * @param {NS} ns 
  * */
 export async function main(ns) {
+  // get HTMLElements without RAM cost
   const doc = globalThis["document"];
+
+  // Pull Terminal onto desk
+  doc.querySelectorAll("[data-testid='LastPageIcon']")[0].nextSibling.click();
+
   // Acquire a reference to the terminal text field
   const terminalInput = doc.getElementById("terminal-input");
 
