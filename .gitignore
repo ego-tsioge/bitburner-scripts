@@ -3,3 +3,7 @@
 *sublime*
 ./spicken/
 spicken/
+*.zip
+*.7z
+./test/
+test/
