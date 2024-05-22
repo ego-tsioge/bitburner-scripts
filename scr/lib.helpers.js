@@ -9,6 +9,7 @@ export class settings {
 	 * defaultwerte
 	 */
 	static #data = {
+		debug: false,
 		reservedHomeRam: 8,
 		target: 'n00dles',
 		botnetName: 'botnet',
@@ -139,6 +140,16 @@ export function timeStamp(time = 0) {
 	return time.toLocaleTimeString() + "," + time.getMilliseconds();
 }
 
+export async function debugMSG(ns, msg, delay = 0) {
+	if (settings.debug) {
+		let text = 'INFO: ' + msg;
+		if (delay > 0) text += '; wartet noch ' + delay + ' sec.'
+		ns.tprint(text);
+		if (delay > 0) await ns.sleep(delay * 1000)
+	}
+
+}
+
 export function terminal(ns, command) {
 	const doc = globalThis["document"];
 	// Acquire a reference to the terminal text field
@@ -263,6 +274,10 @@ export function log(ns, message = "", alsoPrintToTerminal = false, toastStyle = 
 		//ns.write("log.terminal.txt", message + '\n', 'a'); // Note: we should get away with not awaiting this promise since it's not a script file
 	}
 	return message;
+}
+/** If the argument is an Error instance, returns it as is, otherwise, returns a new Error instance. */
+function asError(error) {
+	return error instanceof Error ? error : new Error(typeof error === 'string' ? error : JSON.stringify(error));
 }
 /** Helper to retry something that failed temporarily (can happen when e.g. we temporarily don't have enough RAM to run)
  * @param {NS} ns - The nestcript instance passed to your script's main entry point */

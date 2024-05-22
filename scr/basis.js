@@ -8,6 +8,8 @@ const argsSchema = [
   ['help', false], // 
 ];
 
+
+
 export async function main(ns) {
   let debug = false;
   // *** checks zum start ***********************************************************
