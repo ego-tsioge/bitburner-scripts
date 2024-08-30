@@ -10,7 +10,7 @@ export async function main(ns) {
 		['nextScript', undefined]
 	]);
 	if (options.help) {
-		let info = "INFO: dieses script erfasst die server die sich als Bots eignen und sammelt daten über sie";
+		let info = "INFO: dieses script erfasst die server die sich als Bots eignen und sammelt daten über sie. Gleichzeitig werden schon mal weaken, grow und hack verteilt.";
 		ns.tprint(info);
 		return 0
 	}
@@ -111,7 +111,7 @@ export async function main(ns) {
 	settings.setItem(options.botnetName, botNet);
 
 	if (options._[0]) { options.nextScript = options._[0] }
-	if (options.nextScript || options._[0]) {
+	if (options.nextScript) {
 		ns.tprint(`[${timeStamp()}] Übergebe an Skript '${options.nextScript}'`)
 		ns.spawn(options.nextScript, { threads: 1, spawnDelay: settings.spawnDelay })
 	} else {

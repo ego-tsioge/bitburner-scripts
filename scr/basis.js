@@ -2,9 +2,9 @@ import { settings, timeStamp } from "./lib.helpers.js";
 
 // https://github.com/bitburner-official/bitburner-src/blob/stable/markdown/bitburner.ns.flags.md
 const argsSchema = [
-  ['nextAction', undefined], // platzhalter für eine nächste Aktion
+  ['folgeaktion', undefined], // platzhalter für eine nächste Aktion
   ['reset', false], // 
-  ['target', undefined], // 
+  ['ziel', undefined], // 
   ['help', false], // 
 ];
 
@@ -20,44 +20,56 @@ export async function main(ns) {
     return 0
   }
   if (ns.getHostname() !== 'home') { ns.tprint('ERROR: dieses Skript sollte nur von home starten'); return -1 }
-  if (opt.reset) { opt.nextAction = 'reset' }
+  if (opt.reset) { opt.nextaktion = 'reset' }
   if (opt.target) { settings.setItem('target', opt.target) }
 
   // *** wirklicher start ***********************************************************
-  ns.tprint(`[${timeStamp()}] Starte Skript '${ns.getScriptName()}'`)
   // Plan:: dieses script soll den start managen (eventuell auch alles), mangels kontrolle
   // Plan:: wird man den user zum aufstocken von Ram auffordern müssen
   // Plan:: 200k Hacknet invest kann das script regeln
 
   // Plan:: 1.  prüfen wieviel ram wir haben <32GB??? nee erstmal so
-  let action;
-  if (opt.nextAction) { // diese anweisung sollte alle anderen overrulen, zB zum aufräumen
-    action = opt.nextAction;
-  } else if (settings.nextAction) {
-    action = settings.nextAction;
-    settings.resetItem('nextAction');
-  } else { // wenn noch nichts passiert ist, müssen wir wohl erstmal nachschauen
+  // Plan:: 1.1 bei 8gb sind wir noch am anfang und sollten NUR n00dles schröpfen (10-20min)
+  // Plan:: 1.1a  daten sammeln und HGW-Scripte verteilen --> spider <100ms
+  // Plan:: 1.1b  entscheidungsfindung 
+  // Plan:: 1.1c  HGW gegen n00dles
+  // Plan:: 1.1d  spider ... a s o 
+  // Plan:: 1.2 hier nen teuflisch guten plan machen oder ram ausreizen AKA kommt später ...
+  // 
+  let aktion;
+  if (opt.nextAction) { // diese anweisung hier, soll alle anderen overrulen, zB zum aufräumen (run basis.js --nextaktion neustart)
+    aktion = opt.nextAction;
 
-    if (!settings.lastAction) { //soll endlosschleifen verhindern 
-      action = 'spider';
+  } else if (settings.nextAction) { // wenn nichts vorgegeben wurde sind wir im normalen programmablauf
+    aktion = settings.nextAction;   // aktion aus settings übernehmen, in lastAktion schieben und reseten
+    //settings.setItem('lastAction') = aktion;
+    settings.resetItem('nextAction');
+
+  } else { // wenn noch nichts passiert ist (in settings stand nichts), müssen wir wohl erstmal nachschauen
+    if (!settings.lastaktion) {     // die 2.abfrage soll endlosschleifen verhindern
+      aktion = 'aufklaeren';
     }
   }
-  dToast('' + settings.getItem(settings.botnetName)['bots'][settings.target]);
 
-  dToast("Switch/Case: " + action);
-  switch (action) {
+
+
+  switch (aktion) {
     case 'reset':
     case 'neustart':
       settings.resetItem('nextAction');
       settings.resetItem('lastAction');
       settings.resetItem('target');
-      action = 'spider'
-    case 'spider':
-      scriptChaining(ns, action, 'evaluate', ns.getScriptName());
+    // darf mit aufklären weitermachen
+    case 'aufklaeren':
+      settings.setItem('nextAction', 'evaluieren');
+      settings.setItem('lastAction', aktion);
+      let skript = settings.files[aktion];
+      ns.tprint(`[${timeStamp()}] Übergebe an Skript '${skript}'`);
+      ns.spawn(skript, { threads: 1, spawnDelay: settings.spawnDelay }, ns.getScriptName());
       // throw new Error('an dem punkt sollte das script nicht ankommen');
       break;
-    case 'evaluate':
-      settings.setItem('lastAction', action);
+    case 'evaluieren':
+      settings.setItem('lastAction', aktion);
       let botNet = settings.getItem(settings.botnetName)['bots'];
       let target = botNet[settings.target];
       let growCount = Math.ceil(target.growCount);
@@ -326,18 +338,13 @@ export async function main(ns) {
 
 
 
-  /**     let action = 'spider';
-    let script = settings.files[action];
+  /**     let aktion = 'spider';
+    let script = settings.files[aktion];
 
     ns.tprint(`[${timeStamp()}] Übergebe an Skript '${options.nextScript}'`)
     ns.spawn(options.nextScript, { threads: 1, spawnDelay: 50 }) */
 
-  // Plan:: 1.1 bei 8gb sind wir noch am anfang und sollten NUR n00dles schröpfen (10-20min)
-  // Plan:: 1.1a  daten sammeln und HGW-Scripte verteilen --> spider <100ms
-  // Plan:: 1.1b  entscheidungsfindung 
-  // Plan:: 1.1c  HGW gegen n00dles
-  // Plan:: 1.1d  spider ... a s o 
-  // Plan:: 1.2 hier nen teuflisch guten plan machen oder ram ausreizen AKA kommt später ...
+
 
 
 
@@ -350,14 +357,6 @@ export async function main(ns) {
 
 } // end main
 
-function scriptChaining(ns, action, nextAction = undefined, nextScript = undefined) {
-  let script = settings.files[action];
-  settings.setItem('nextAction', nextAction);
-  settings.setItem('lastAction', action);
-  ns.tprint(`[${timeStamp()}] Übergebe an Skript '${script}'`)
-  ns.spawn(script, { threads: 1, spawnDelay: settings.spawnDelay }, nextScript);
-  ns.exit()
-}
 
 // Formelklau ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 export function calculateGrowGain(ns, host, threads = 1, cores = 1, opts = {}) {

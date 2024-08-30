@@ -15,17 +15,18 @@ export class settings {
 		botnetName: 'botnet',
 		files: {
 			'basis': 'basis.js',
-			'growing': 'bin.grow.js',
-			'hacking': 'bin.hack.js',
-			'weaking': 'bin.weak.js',
+			'growing': 'scr/bin.grow.js',
+			'hacking': 'scr/bin.hack.js',
+			'weaking': 'scr/bin.weak.js',
 			'do': 'doProcess.js',
 			'git-init': 'git-init.js',
-			'lib.helpers': 'lib.helpers.js',
-			'lib.server': 'lib.server.js',
-			'lib.starter': 'lib.starter.js',
-			'spider': 'modul.spider.js',
-			'mon': 'mon.js',
-			'orig.lib.helpers': 'orig.lib.helpers.js'
+			'lib.helpers': 'scr/lib.helpers.js',
+			'lib.server': 'scr/lib.server.js',
+			'lib.starter': 'scr/lib.starter.js',
+			'aufklaeren': 'scr/mod.spider.js',
+			'vorbereiten': 'scr/mod.prepareTarget.js'
+			'mon': 'scr/mon.js',
+			'orig.lib.helpers': 'scr/orig.lib.helpers.js'
 		},
 		spawnDelay: 50,
 		pref: 'ego_',
