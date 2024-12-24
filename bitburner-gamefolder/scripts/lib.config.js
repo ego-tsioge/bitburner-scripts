@@ -132,13 +132,13 @@ export const FILE_PREFIXES = {
 };
 
 /**
- * Hacking Tools Konfiguration
- * @constant {Object}
+ * Hacking Tools Konfiguration, erleichtert das Hinzufügen neuer Tools (falls das mal kommt)
+ * @constant {Array<[string, string]>} [Funktion, Dateiname]
  */
-export const HACKING_TOOLS = {
-	'brutessh'  : 'BruteSSH.exe',
-	'ftpcrack'  : 'FTPCrack.exe',
-	'relaysmtp' : 'relaySMTP.exe',
-	'httpworm'  : 'HTTPWorm.exe',
-	'sqlinject' : 'SQLInject.exe'
-}; 
+export const HACKING_TOOLS = [
+	['brutessh', 'BruteSSH.exe'],
+	['ftpcrack', 'FTPCrack.exe'],
+	['relaysmtp', 'relaySMTP.exe'],
+	['httpworm', 'HTTPWorm.exe'],
+	['sqlinject', 'SQLInject.exe']
+]; 
