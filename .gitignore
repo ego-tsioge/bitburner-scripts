@@ -1,9 +1,17 @@
-# gitignoretest
+# IDE
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+.idea/
+
+# Betriebssystem
 .DS_Store
-*sublime*
-./spicken/
-spicken/
-*.zip
-*.7z
-./test/
-test/
+Thumbs.db
+
+# Node
+node_modules/
+npm-debug.log*
+
+# Bitburner spezifisch
+*.txt
+NetscriptDefinitions.d.ts 
