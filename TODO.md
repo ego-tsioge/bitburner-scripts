@@ -1,6 +1,6 @@
 # Bitburner Projekt - Aufgabenliste
 
-## [IN PROGRESS] GitHub Setup
+## [IN PROGRESS] Phase 0: GitHub Setup
 - [ ] Repository vorbereiten
   - [ ] .gitignore erstellen
   - [ ] README.md aktualisieren

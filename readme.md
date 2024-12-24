@@ -30,6 +30,19 @@ Dieses Skript lädt automatisch dieses Repro auf den Home Server (im Spiel).
 
 3. Mit `run go.js` werden die ersten Server infiziert (Geld verdient) und der Hacking-Skill trainiert.
 
+## Ordnerstruktur
+bitburner-scripts/              # Haupt-Repository
+│
+├── bitburner-gamefolder/       # Entspricht 'home' im Spiel Bitburner
+│   ├── basis.js                # Hauptsteuerung (Einstiegspunkt)
+│   ├── git-init.js             # GitHub Initialisierung
+│   │
+│   └── scripts/                # Alle anderen Spiel-Dateien
+│       ├── bin.*               # Ausführbare Skripte (hack/weak/grow)
+│       ├── lib.*               # Bibliotheken
+│       └── mod.*               # Module (werden normalerweise von basis.js angesprochen)
+
+
 ## Funktionsweise
 Es läuft nach möglichkeit nur eine Datei von den Managern und der Status wird im localStorage gespeichert, um das RAM-Limit von 8GB auf Home zu umgehen. 
 
