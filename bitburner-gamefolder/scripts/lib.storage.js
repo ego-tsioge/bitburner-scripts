@@ -5,8 +5,6 @@
 
 import { SETTINGS } from 'lib.config.js';
 
-const PREFIX = 'bb_';  // Prefix für alle unsere Keys
-
 /**
  * Speichert Daten im localStorage
  * @param {string} key - Schlüssel (ohne Prefix)
@@ -14,7 +12,7 @@ const PREFIX = 'bb_';  // Prefix für alle unsere Keys
  */
 export function saveData(key, data) {
 	try {
-		localStorage.setItem(PREFIX + key, JSON.stringify({
+		localStorage.setItem(SETTINGS.STORAGE_PREFIX + key, JSON.stringify({
 			...data,
 			lastUpdate: Date.now()
 		}));
@@ -31,7 +29,7 @@ export function saveData(key, data) {
  */
 export function loadData(key, defaultValue = null) {
 	try {
-		const item = localStorage.getItem(PREFIX + key);
+		const item = localStorage.getItem(SETTINGS.STORAGE_PREFIX + key);
 		if (!item) return defaultValue;
 		
 		const data = JSON.parse(item);
@@ -50,7 +48,7 @@ export function loadData(key, defaultValue = null) {
  */
 export function loadDataWithTimestamp(key) {
 	try {
-		const item = localStorage.getItem(PREFIX + key);
+		const item = localStorage.getItem(SETTINGS.STORAGE_PREFIX + key);
 		return item ? JSON.parse(item) : null;
 	} catch (error) {
 		console.error(`Fehler beim Laden von ${key}: ${error}`);
@@ -63,7 +61,7 @@ export function loadDataWithTimestamp(key) {
  * @param {string} key - Schlüssel (ohne Prefix)
  */
 export function deleteData(key) {
-	localStorage.removeItem(PREFIX + key);
+	localStorage.removeItem(SETTINGS.STORAGE_PREFIX + key);
 }
 
 /**
@@ -74,8 +72,8 @@ export function listAllData() {
 	const data = {};
 	for (let i = 0; i < localStorage.length; i++) {
 		const key = localStorage.key(i);
-		if (key.startsWith(PREFIX)) {
-			const cleanKey = key.slice(PREFIX.length);
+		if (key.startsWith(SETTINGS.STORAGE_PREFIX)) {
+			const cleanKey = key.slice(SETTINGS.STORAGE_PREFIX.length);
 			data[cleanKey] = loadData(cleanKey);
 		}
 	}
