@@ -124,56 +124,6 @@ export const SERVER_MODEL = {
 };
 
 /**
- * Globale Einstellungen für das Hacking-System
- * @constant {Object}
- */
-export const SETTINGS = {
-	// Scan-Intervalle
-	NETWORK_SCAN_INTERVAL: 5 * 60 * 1000,  // 5 Minuten
-	TARGET_UPDATE_INTERVAL: 60 * 1000,      // 1 Minute
-	
-	// Server-Einstellungen
-	RESERVED_RAM: 8,  // GB RAM die auf home reserviert bleiben
-	
-	// Hack-Einstellungen
-	DEFAULT_TARGET: 'n00dles',
-	
-	// Debug
-	DEBUG: false,
-	
-	// Alte Dateien die gelöscht werden sollen
-	OLD_FILES: [
-		// Alte Tutorial Scripts
-		'n00dles.js',
-		// Alte Test Scripts
-		//'test.check.js',
-		// Alte Manager Versionen
-		'mgr.hacknet.js',
-		'mgr.spider.js',
-		'mgr.scheduler.js',
-		// Alte Binary Versionen
-		'hack.js',
-		'grow.js',
-		'weak.js'
-	],
-	
-	// Hacknet Einstellungen
-	HACKNET: {
-		UPDATE_INTERVAL: 5 * 60 * 1000,  // 5 Minuten
-		NODES: 1,                   // Mindestanzahl für Netburners-Faction
-		LEVEL: 100,                 // Mindestlevel für Netburners-Faction
-		RAM: 8,                     // MindestRAM für Netburners-Faction
-		CORES: 4,                   // MindestAnzahl Kerne für Netburners-Faction
-		MODE: 'order',              // order|free|freeOverOrder
-		BUDGET: 200000,             // Budget für Free-Mode
-		WAIT_TIME: 1000            // Wartezeit wenn nicht genug Geld (1 Sekunde)
-	},
-	
-	// Storage
-	STORAGE_PREFIX: 'ego_'  // Prefix für localStorage Keys
-};
-
-/**
  * Datei-Präfixe für verschiedene Script-Typen
  * @constant {Object}
  */
