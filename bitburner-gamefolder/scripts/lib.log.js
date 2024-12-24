@@ -2,7 +2,7 @@
  * Zentrale Logging- und Fehlerbehandlungs-Bibliothek
  */
 
-import { SETTINGS } from 'lib.config.js';
+import { SETTINGS } from '/scripts/lib.config.js';
 
 /**
  * Logger-Klasse für einheitliches Logging

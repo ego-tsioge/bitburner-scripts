@@ -1,5 +1,5 @@
-import { SETTINGS } from 'lib.config.js';
-import { Logger } from 'lib.log.js';
+import { SETTINGS } from '/scripts/lib.config.js';
+import { Logger } from '/scripts/lib.log.js';
 
 /**
  * Hacknet Node Manager

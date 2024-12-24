@@ -3,7 +3,7 @@
  * Verwaltet alle Zugriffe auf den persistenten Speicher
  */
 
-import { SETTINGS } from 'lib.config.js';
+import { SETTINGS } from '/scripts/lib.config.js';
 
 /**
  * Speichert Daten im localStorage

@@ -1,6 +1,6 @@
-import { STORAGE_KEYS, SETTINGS, HACKING_TOOLS } from 'lib.config.js';
-import { saveData, loadData } from 'lib.storage.js';
-import { Logger } from 'lib.log.js';
+import { STORAGE_KEYS, SETTINGS, HACKING_TOOLS } from '/scripts/lib.config.js';
+import { saveData, loadData } from '/scripts/lib.storage.js';
+import { Logger } from '/scripts/lib.log.js';
 
 /**
  * Netzwerk-Scanner und Analysetool
