@@ -3,7 +3,7 @@ import { STORAGE_KEYS, SETTINGS } from 'lib.config.js';
 import { loadData, saveData } from 'lib.storage.js';
 
 /**
- * Hauptmanager des Hacking-Systems
+ * Hauptmanager des Hacking-Systems 
  * Koordiniert alle anderen Manager und verwaltet den Systemstatus
  * 
  * @param {NS} ns - Bitburner Netscript API

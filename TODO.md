@@ -26,6 +26,11 @@
   - [x] Alles in /scripts behalten (außer basis.js und git-init.js)
   - [x] bitburner.scriptRoot prüfen
 - [x] Dateien umbenennen nach Präfix-Schema
+- [x] Ordnerstruktur anpassen
+  - [x] ordner scripts umbenennen zu gamefolder
+  - [x] scripts anlegen
+  - [x] dateien verschieben
+  - [x] bitburner plugin anpassen
 - Aufwand: ~30 Minuten
 
 ## [PLANNED] Phase 2: Basis-Funktionalität
