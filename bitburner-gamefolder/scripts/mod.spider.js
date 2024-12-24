@@ -25,7 +25,7 @@ Flags:
   --help          Diese Hilfe anzeigen
 		`);
 		return;
-	}
+	} 
 
 	const log = new Logger(ns, ns.getScriptName(), { showDebug: flags.debug });
 	
@@ -49,28 +49,33 @@ Flags:
 				serverData.ports.required <= toolCount && 
 				serverData.level <= ns.getHackingLevel()) {
 				
-				try {
-					// Ports öffnen
-					for (const [func, file] of HACKING_TOOLS) {
-						if (ns.fileExists(file, 'home')) {
-							ns[func](hostname);
+				// Ports öffnen
+				let portsOpened = 0;
+				for (const [func, file] of HACKING_TOOLS) {
+					if (ns.fileExists(file, 'home')) {
+						if (ns[func](hostname)) {
+							portsOpened++;
+							log.debug(`Port auf ${hostname} mit ${file} geöffnet`);
 						}
 					}
-					
-					// Root-Zugriff erlangen
-					ns.nuke(hostname);
-					
+				}
+				
+				// Root-Zugriff versuchen
+				if (ns.nuke(hostname)) {
 					// Server-Daten aktualisieren	
 					serverData.admin = true;
 					saveData(STORAGE_KEYS.NETWORK, { 
-						servers: { 
-							[hostname]: serverData 
-						} 
+						servers: { [hostname]: serverData } 
 					});
 					
-					log.success(`Root-Zugriff auf ${hostname} erlangt!`);
-				} catch (error) {
-					log.warn(`Konnte ${hostname} nicht hacken: ${error.message}`);
+					// Bin-Dateien kopieren
+					if (await copyBinFiles(ns, hostname, log)) {
+						log.success(`Root-Zugriff auf ${hostname} erlangt und Dateien kopiert!`);
+					} else {
+						log.success(`Root-Zugriff auf ${hostname} erlangt!`);
+					}
+				} else {
+					log.warn(`Konnte ${hostname} nicht hacken - ${portsOpened}/${serverData.ports.required} Ports geöffnet`);
 				}
 			}
 		}
@@ -181,4 +186,29 @@ function analyzeAndUpdateServer(ns, hostname) {
 	saveData(STORAGE_KEYS.NETWORK, networkData);
 	
 	return serverData;
+}
+
+/**
+ * Kopiert die Bin-Dateien auf einen Server
+ * @param {NS} ns - Bitburner Netscript API
+ * @param {string} hostname - Zielserver
+ * @param {Logger} log - Logger Instanz
+ * @returns {Promise<boolean>} True wenn erfolgreich
+ */
+async function copyBinFiles(ns, hostname, log) {
+	try {
+		const binFiles = [
+			'/scripts/bin.hack.js',
+			'/scripts/bin.grow.js', 
+			'/scripts/bin.weak.js'
+		];
+		
+		for (const file of binFiles) {
+			await ns.scp(file, hostname, 'home');
+		}
+		return true;
+	} catch (error) {
+		log.error(`Fehler beim Kopieren der Bin-Dateien auf ${hostname}: ${error}`);
+		return false;
+	}
 }
