@@ -1,20 +1,20 @@
 # Bitburner Projekt - Aufgabenliste
 
-## [IN PROGRESS] Phase 0: GitHub Setup
-- [ ] Repository vorbereiten
-  - [ ] .gitignore erstellen
-  - [ ] README.md aktualisieren
-  - [ ] Lizenz auswählen (optional)
-- [ ] Lokales Git einrichten
-  - [ ] git init
-  - [ ] git remote add
-- [ ] Erster Commit
-  - [ ] Dateien stagen
-  - [ ] Initial commit
-  - [ ] Push zu GitHub
+## [COMPLETED] Phase 0: GitHub Setup
+- [x] Repository vorbereiten
+  - [x] .gitignore erstellen
+  - [x] README.md aktualisieren
+  - [x] Lizenz auswählen (optional)
+- [x] Lokales Git einrichten
+  - [x] git init
+  - [x] git remote add
+- [x] Erster Commit
+  - [x] Dateien stagen
+  - [x] Initial commit
+  - [x] Push zu GitHub
 - Aufwand: ~15 Minuten
 
-## [PUT ON HOLD] Phase 1: Dateiorganisation
+## [IN PROGRESS] Phase 1: Dateiorganisation
 - [x] Präfix-System implementieren
   - basis.js // Einstiegspunkt für Spielablauf (im Root)
   - Module: mod.*
