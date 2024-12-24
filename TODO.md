@@ -14,7 +14,7 @@
   - [x] Push zu GitHub
 - Aufwand: ~15 Minuten
 
-## [IN PROGRESS] Phase 1: Dateiorganisation
+## [COMPLETED] Phase 1: Dateiorganisation
 - [x] Präfix-System implementieren
   - basis.js // Einstiegspunkt für Spielablauf (im Root)
   - Module: mod.*
@@ -31,9 +31,8 @@
   - [x] scripts anlegen
   - [x] dateien verschieben
   - [x] bitburner plugin anpassen
-- Aufwand: ~30 Minuten
 
-## [PLANNED] Phase 2: Basis-Funktionalität
+## [IN PROGRESS] Phase 2: Basis-Funktionalität
 - [ ] Basis-System überarbeiten
   - [ ] Status-Management optimieren
   - [ ] Fehlerbehandlung verbessern
@@ -41,7 +40,6 @@
 - [ ] Scheduler implementieren
   - [ ] Einfaches Timing-System
   - [ ] Batch-Operationen
-- Aufwand: ~2 Stunden
 
 ## [BACKLOG] Optimierungen
 - [ ] Server-Targeting verbessern
