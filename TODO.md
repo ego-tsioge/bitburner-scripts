@@ -34,8 +34,8 @@
 
 ## [IN PROGRESS] Phase 2: Basis-Funktionalität
 - [ ] Spider-Modul überarbeiten
-  - [ ] funktionsumfang festlegen und implementieren
-  - [ ] Funktionalität testen
+  - [x] funktionsumfang festlegen und implementieren
+  - [x] Funktionalität testen
   - [ ] Optimierungen implementieren
 - [ ] Basis-System überarbeiten
   - [ ] Status-Management optimieren
