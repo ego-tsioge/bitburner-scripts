@@ -127,6 +127,10 @@ Code should do what the name and comments suggest. Conventions should be followe
   - nacheinander laufen. (übergabe nur mit ns.spawn, Status im localStorrage merken)
   - nicht mehr wie 8 GB Ram verbrauchen (das bezieht sich auf spielinternen Ram)
 - Datenpersistenz
-  - Alle persistenten Daten sollen im localStorage gespeichert werden
+  - wenn Daten zum Status gemerkt werden müssen, dann sollen im localStorage gespeichert werden
   - Der Prefix für localStorage-Keys wird zentral in SETTINGS definiert
- 
+- devide and conquer
+  - bei der problemlösung werden die Aufgaben in kleinere Teilaufgaben aufgeteilt
+  - die Teilaufgaben werden nacheinander gelöst
+  - Teilaufgaben werden in der TODO.md dokumentiert
+  - die TODO.md soll immer aktuell sein
