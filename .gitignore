@@ -15,3 +15,6 @@ npm-debug.log*
 # Bitburner spezifisch
 *.txt
 NetscriptDefinitions.d.ts 
+
+# Beispiel-Dateien ignorieren
+beispiel*.js
