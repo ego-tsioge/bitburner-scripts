@@ -33,10 +33,19 @@
   - [x] bitburner plugin anpassen
 
 ## [IN PROGRESS] Phase 2: Basis-Funktionalität
-- [ ] Spider-Modul überarbeiten
+- [x] Spider-Modul überarbeiten
   - [x] funktionsumfang festlegen und implementieren
   - [x] Funktionalität testen
   - [ ] Optimierungen implementieren
+- [ ] Hacknet-Modul fertigstellen
+  - [ ] Effizienzberechnung pro Element
+    - [ ] Kosten-Nutzen-Analyse
+    - [ ] Automatische Auswahl des besten Elements
+  - [ ] Order-Mode implementieren (feste Zielwerte)
+    - [ ] parameter/zielwerte festlegen
+  - [ ] Free-Mode implementieren
+    - [ ] parameter festlegen
+  - [ ] Tests und Optimierungen
 - [ ] Basis-System überarbeiten
   - [ ] Status-Management optimieren
   - [ ] Fehlerbehandlung verbessern
