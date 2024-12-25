@@ -1,6 +1,6 @@
-import { Logger } from 'lib.log.js';
-import { STORAGE_KEYS, SETTINGS } from 'lib.config.js';
-import { loadData, saveData } from 'lib.storage.js';
+import { Logger } from '/scripts/lib.log.js';
+import { STORAGE_KEYS, SETTINGS } from '/scripts/lib.config.js';
+import { loadData, saveData } from '/scripts/lib.storage.js';
 
 /**
  * Hauptmanager des Hacking-Systems 
