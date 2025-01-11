@@ -1,0 +1,23 @@
+# Language configuration for Cursor AI
+language = "javascript"
+test_framework = "none"
+project_type = "game_scripts"
+
+# Project description
+description = """
+Collection of personal JavaScript/NetScript scripts for the programming game Bitburner.
+These scripts automate various in-game tasks and help manage game progression.
+Scripts focus on hacking mechanics, server management, and resource optimization.
+"""
+
+# Directory structure
+source_path = "/home"  # Bitburner home directory für die Scripts
+documentation_path = "/"  # Für README.md, TODO.md etc.
+
+# Ignore patterns (align with .gitignore)
+exclude_patterns = [
+    "bitburnerSave_*.json.gz",
+    ".git/*",
+    "*.sublime-*",
+    ".vscode/*"
+]
