@@ -3,7 +3,7 @@
 	"bitburner.authToken": "2sZgA4e1XcpdaOSEhoPfI6hqy2UzG4eSb/O6SkQgT4QqLA91oK83lJu+zroGLMz5",
 	"bitburner.fileWatcher.enable": true,
 	"bitburner.showPushSuccessNotification": true,
-	"bitburner.scriptRoot": "./bitburner-gamefolder",
+	"bitburner.scriptRoot": "./bitburner-home",
 	"bitburner.showFileWatcherEnabledNotification": true,
 
     // Globale Editor-Einstellungen
@@ -20,8 +20,8 @@
         "editor.formatOnSave": true,
         "editor.defaultFormatter": "esbenp.prettier-vscode",
         "editor.codeActionsOnSave": {
-            "source.fixAll.eslint": true
-        }
+			"source.fixAll.eslint": "explicit"
+		}
     },
 
     // JSON spezifische Einstellungen (für Konfigurationsdateien)

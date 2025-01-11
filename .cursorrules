@@ -1,3 +1,22 @@
+# Interaction rules
+interaction = {
+    "language" = "deutsch"              # Kommunikation auf Deutsch
+    "style" = "direct"                  # Direkte Ansprache, keine Entschuldigungen oder Danksagungen
+    "communication" = [
+        "menschlich kommunizieren",     # Natürliche Gesprächsführung
+        "prägnante Antworten geben",    # Kurz und relevant
+        "keine Floskeln verwenden"      # Keine unnötigen Höflichkeitsformeln
+    ]
+}
+
+# Code handling rules
+code_rules = {
+    "verification" = [
+        "Informationen vor Änderungen prüfen",
+        "Bestehende Codestrukturen bewahren"
+    ]
+}
+
 # Language configuration for Cursor AI
 language = "javascript"
 test_framework = "none"
@@ -13,6 +32,19 @@ Scripts focus on hacking mechanics, server management, and resource optimization
 # Directory structure
 source_path = "/bitburner-home"  # Bitburner home directory für die Scripts
 documentation_path = "/"  # Für README.md, TODO.md etc.
+
+# Git conventions
+git_rules = {
+    "commit_format" = "type: message"
+    "types" = [
+        "fix",      # Bugfixes
+        "feat",     # neue Features
+        "refactor", # Umstrukturierungen
+        "docs",     # Dokumentation
+        "test",     # Tests
+        "chore"     # Projekt-Infrastruktur, Build-Prozesse, Konfigurationen
+    ]
+}
 
 # Ignore patterns (align with .gitignore)
 exclude_patterns = [
@@ -52,4 +84,19 @@ formatting_rules = {
     "markdown" = {
         "trim_trailing_whitespace" = false
     }
+}
+
+# Learning objectives
+learning_goals = {
+    "primary" = [
+        "Bitburner Spielmechaniken verstehen",
+        "JavaScript/NetScript Programmierung verbessern",
+        "Git-Workflow beherrschen"
+    ]
+    "git_skills" = [
+        "Branches effektiv nutzen",
+        "Saubere Commit-Messages schreiben",
+        "Pull Requests erstellen und reviewen",
+        "Merge-Konflikte lösen"
+    ]
 }
