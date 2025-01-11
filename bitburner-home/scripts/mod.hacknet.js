@@ -47,6 +47,74 @@ export async function main(ns) {
         return totals;
     }
 
+    function getBestUpgrade(currentTotals) {
+        let bestUpgrade = null;
+
+        // Neue Node prüfen
+        const nodeCost = ns.hacknet.getPurchaseNodeCost();
+        const newNodeProduction = calculateNodeProduction(1, 1, 1);
+        const nodeROI = newNodeProduction / nodeCost;
+        bestUpgrade = {
+            type: 'node',
+            index: -1,
+            cost: nodeCost,
+            roi: nodeROI
+        };
+
+        // Existierende Nodes prüfen
+        for (let i = 0; i < ns.hacknet.numNodes(); i++) {
+            const stats = ns.hacknet.getNodeStats(i);
+            const currentProduction = calculateNodeProduction(stats.level, stats.ram, stats.cores);
+
+            // Level Upgrade (nur wenn noch Level benötigt)
+            if (currentTotals.level < NETBURNER_REQS.totalLevel) {
+                const levelCost = ns.hacknet.getLevelUpgradeCost(i, 1);
+                const levelProduction = calculateNodeProduction(stats.level + 1, stats.ram, stats.cores);
+                const levelROI = (levelProduction - currentProduction) / levelCost;
+                if (levelROI > bestUpgrade.roi || (levelROI === bestUpgrade.roi && levelCost < bestUpgrade.cost)) {
+                    bestUpgrade = {
+                        type: 'level',
+                        index: i,
+                        cost: levelCost,
+                        roi: levelROI
+                    };
+                }
+            }
+
+            // RAM Upgrade (nur wenn noch RAM benötigt)
+            if (currentTotals.ram < NETBURNER_REQS.totalRam) {
+                const ramCost = ns.hacknet.getRamUpgradeCost(i, 1);
+                const ramProduction = calculateNodeProduction(stats.level, stats.ram * 2, stats.cores);
+                const ramROI = (ramProduction - currentProduction) / ramCost;
+                if (ramROI > bestUpgrade.roi || (ramROI === bestUpgrade.roi && ramCost < bestUpgrade.cost)) {
+                    bestUpgrade = {
+                        type: 'ram',
+                        index: i,
+                        cost: ramCost,
+                        roi: ramROI
+                    };
+                }
+            }
+
+            // Core Upgrade (nur wenn noch Cores benötigt)
+            if (currentTotals.cores < NETBURNER_REQS.totalCores) {
+                const coreCost = ns.hacknet.getCoreUpgradeCost(i, 1);
+                const coreProduction = calculateNodeProduction(stats.level, stats.ram, stats.cores + 1);
+                const coreROI = (coreProduction - currentProduction) / coreCost;
+                if (coreROI > bestUpgrade.roi || (coreROI === bestUpgrade.roi && coreCost < bestUpgrade.cost)) {
+                    bestUpgrade = {
+                        type: 'core',
+                        index: i,
+                        cost: coreCost,
+                        roi: coreROI
+                    };
+                }
+            }
+        }
+
+        return bestUpgrade;
+    }
+
     // Erste Node kaufen wenn nötig
     if (ns.hacknet.numNodes() === 0) {
         const nodeIndex = ns.hacknet.purchaseNode();
