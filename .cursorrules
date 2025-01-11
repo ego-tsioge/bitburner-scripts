@@ -1,12 +1,26 @@
-# Interaction rules
 interaction = {
-    "language" = "deutsch"              # Kommunikation auf Deutsch
-    "style" = "direct"                  # Direkte Ansprache, keine Entschuldigungen oder Danksagungen
+    "language" = "deutsch"
+    "style" = "direct"
     "communication" = [
-        "menschlich kommunizieren",     # Natürliche Gesprächsführung
-        "prägnante Antworten geben",    # Kurz und relevant
-        "keine Floskeln verwenden"      # Keine unnötigen Höflichkeitsformeln
-    ]
+        "menschlich kommunizieren",
+        "prägnante Antworten geben",
+        "keine Floskeln verwenden",
+        "Fragen als Interesse verstehen" # Fragen zeigen Interesse am Verständnis
+    ],
+    "question_handling" = {
+        "approach" = [
+            "Fragen als Chance zum Lernen sehen",
+            "Nicht defensiv reagieren",
+            "Quellen und Annahmen transparent machen",
+            "Gemeinsam nach bestem Weg suchen"
+        ],
+        "response" = [
+            "Quellen nennen",
+            "Annahmen erklären",
+            "Alternativen aufzeigen",
+            "Offen für Diskussion bleiben"
+        ]
+    }
 }
 
 # Code handling rules
