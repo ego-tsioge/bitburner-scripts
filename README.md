@@ -42,3 +42,10 @@ bitburner-home/           # Spiegelt das Home-Verzeichnis im Spiel
     └── cfg.*.js         # Konfigurationsdateien
 ```
 
+### verwendete Prefixe
+Die Logik dahinter:
+- `mod.` für Module/Modifikatoren, die Spielmechaniken automatisieren
+- `bin.` für die "hacks" (hacking, grow, weaken)
+- `lib.` für code der wiederverwendet wird, quasi bibliotheken
+- `cfg.` für Konfigurationsdateien
+- `test.` für testskripte
