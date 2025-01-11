@@ -1,0 +1,39 @@
+{
+	//plugin settings Bitburner VS Code Integration (SYNC)
+	"bitburner.authToken": "2sZgA4e1XcpdaOSEhoPfI6hqy2UzG4eSb/O6SkQgT4QqLA91oK83lJu+zroGLMz5",
+	"bitburner.fileWatcher.enable": true,
+	"bitburner.showPushSuccessNotification": true,
+	"bitburner.scriptRoot": "./bitburner-gamefolder",
+	"bitburner.showFileWatcherEnabledNotification": true,
+
+    // Globale Editor-Einstellungen
+    "editor.tabSize": 4,
+    "editor.insertSpaces": false,
+    "editor.detectIndentation": false,
+    "files.encoding": "utf8",
+    "files.eol": "\n",
+    "files.trimTrailingWhitespace": true,
+    "files.insertFinalNewline": true,
+
+    // JavaScript/NetScript spezifische Einstellungen
+    "[javascript]": {
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.codeActionsOnSave": {
+            "source.fixAll.eslint": true
+        }
+    },
+
+    // JSON spezifische Einstellungen (für Konfigurationsdateien)
+    "[json]": {
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+
+    // Markdown spezifische Einstellungen (für README etc.)
+    "[markdown]": {
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "files.trimTrailingWhitespace": false
+    }
+}

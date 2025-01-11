@@ -11,7 +11,7 @@ Scripts focus on hacking mechanics, server management, and resource optimization
 """
 
 # Directory structure
-source_path = "/home"  # Bitburner home directory für die Scripts
+source_path = "/bitburner-home"  # Bitburner home directory für die Scripts
 documentation_path = "/"  # Für README.md, TODO.md etc.
 
 # Ignore patterns (align with .gitignore)
@@ -21,3 +21,35 @@ exclude_patterns = [
     "*.sublime-*",
     ".vscode/*"
 ]
+
+# Coding style configuration
+formatting_rules = {
+    # Global formatting
+    "indent_style" = "tab"
+    "indent_size" = 4
+    "tab_width" = 4
+    "end_of_line" = "lf"
+    "charset" = "utf-8"
+    "trim_trailing_whitespace" = true
+    "insert_final_newline" = true
+
+    # Language specific formatting
+    "javascript" = {
+        "quote_type" = "single"
+        "semi" = true
+        "max_line_length" = 80
+        "trailing_comma" = "es5"
+        "bracket_spacing" = true
+        "arrow_parens" = "always"
+        "object_curly_spacing" = true
+    }
+
+    "json" = {
+        "indent_style" = "tab"
+        "indent_size" = 4
+    }
+
+    "markdown" = {
+        "trim_trailing_whitespace" = false
+    }
+}
