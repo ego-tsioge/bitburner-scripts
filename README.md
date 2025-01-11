@@ -15,7 +15,7 @@ Inspirationen gab es bei:
 
 ## Anforderungen
 
-Mein Lösungsansatz soll mit den 8 GB (spielinternes) RAM auskommen, die man beim Spielstart hat. Dazu werden die Aufgaben auf einzelne Module verteilt, von denen immer nur eines läuft. Der State wird im localStorage gemerkt. 
+Mein Lösungsansatz ist für den Spielstart optimiert und kommt mit den anfänglichen 8 GB spielinternem RAM aus. Die Aufgaben werden auf einzelne Module verteilt, von denen immer nur eines läuft. Der State wird im localStorage gespeichert. Dieser modulare Ansatz ermöglicht es, Funktionen zu nutzen, die sonst (gebündelt in einem Script) 20 GB RAM benötigen würden.
 
 ## Installation und Start
 

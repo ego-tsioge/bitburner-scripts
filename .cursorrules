@@ -100,3 +100,15 @@ learning_goals = {
         "Merge-Konflikte lösen"
     ]
 }
+
+# Project constraints
+constraints = {
+    "game_ram" = {
+        "initial_limit" = "8GB"
+        "strategy" = [
+            "Module einzeln ausführen",
+            "State in localStorage speichern",
+            "RAM-Verbrauch pro Skript tracken"
+        ]
+    }
+}
