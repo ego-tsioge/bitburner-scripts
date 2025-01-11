@@ -1,44 +1,105 @@
-/** @param {NS} ns */
+/**
+ * Automatisiert den Aufbau des Hacknet-Netzwerks für die Netburner Faction.
+ * Kauft und upgraded Nodes auf kostengünstigste Weise, um die Mindestanforderungen zu erreichen.
+ *
+ * Netburner Hardware-Anforderungen (Summe aller Nodes):
+ * - Level: 100 gesamt
+ * - RAM: 8 GB gesamt
+ * - Cores: 4 gesamt
+ *
+ * Hinweis: Hacking-Level (80) wird nicht durch dieses Skript erreicht.
+ *
+ * @param {NS} ns - Netscript API
+ */
 export async function main(ns) {
-    // Logging minimieren um RAM zu sparen
-    ns.disableLog('getServerMoneyAvailable');
-    ns.disableLog('sleep');
-
-    // Konfiguration
-    const config = {
-        targetLevel: 100,        // Für Netburner-Qualifikation
-        moneyThreshold: 0.1,     // Nur 10% des verfügbaren Geldes ausgeben
-        waitTime: 1000,          // 1 Sekunde Wartezeit zwischen Checks
+    // Netburner Hardware-Anforderungen
+    const NETBURNER_REQS = {
+        totalLevel: 100,    // Summe aller Node-Level
+        totalRam: 8,        // Summe des RAMs aller Nodes
+        totalCores: 4       // Summe aller Cores
     };
 
-    while (true) {
+    // Berechnet den Ertrag einer Node basierend auf Level, RAM und Cores
+    function calculateNodeProduction(level, ram, cores) {
+        const levelFactor = level * 1.5;
+        const ramFactor = Math.pow(1.035, ram - 1);
+        const coreFactor = (cores + 5) / 6;
+        return levelFactor * ramFactor * coreFactor;
+    }
+
+    // Prüft die aktuellen Gesamtwerte aller Nodes
+    function getCurrentTotals() {
         const nodes = ns.hacknet.numNodes();
-        const playerMoney = ns.getServerMoneyAvailable('home');
+        let totals = {
+            nodes: nodes,
+            level: 0,
+            ram: 0,
+            cores: 0
+        };
 
-        // Erst neuen Node kaufen wenn mindestens einer existiert und Level 10 hat
-        if (nodes === 0 || (nodes < 3 && ns.hacknet.getNodeStats(0).level >= 10)) {
-            const cost = ns.hacknet.getPurchaseNodeCost();
-            if (cost <= playerMoney * config.moneyThreshold) {
-                ns.hacknet.purchaseNode();
-                ns.print('INFO: Neuer Hacknet-Node gekauft');
-            }
-        }
-
-        // Bestehende Nodes upgraden
         for (let i = 0; i < nodes; i++) {
             const stats = ns.hacknet.getNodeStats(i);
+            totals.level += stats.level;
+            totals.ram += stats.ram;
+            totals.cores += stats.cores;
+        }
 
-            // Stoppen wenn Ziel-Level erreicht
-            if (stats.level >= config.targetLevel) continue;
+        return totals;
+    }
 
-            // Level upgraden wenn möglich
-            const levelCost = ns.hacknet.getLevelUpgradeCost(i, 1);
-            if (levelCost <= playerMoney * config.moneyThreshold) {
-                ns.hacknet.upgradeLevel(i, 1);
-                ns.print(`INFO: Node ${i} auf Level ${stats.level + 1} verbessert`);
+    // Erste Node kaufen wenn nötig
+    if (ns.hacknet.numNodes() === 0) {
+        const nodeIndex = ns.hacknet.purchaseNode();
+        if (nodeIndex === -1) {
+            ns.tprint('ERROR: Kauf der ersten Hacknet Node fehlgeschlagen (nicht genug Geld?)');
+            return;
+        }
+        ns.print('INFO: Erste Hacknet Node gekauft');
+    }
+
+    // Hauptschleife
+    while (true) {
+        const totals = getCurrentTotals();
+
+        // Prüfen ob Ziele erreicht
+        if (totals.level >= NETBURNER_REQS.totalLevel &&
+            totals.ram >= NETBURNER_REQS.totalRam &&
+            totals.cores >= NETBURNER_REQS.totalCores) {
+            ns.print('ERFOLG: Alle Hardware-Anforderungen erfüllt!');
+            break;
+        }
+
+        // Beste Upgrade-Option finden und ausführen wenn genug Geld da ist
+        const upgrade = getBestUpgrade(totals);
+        let success = false;
+
+        if (ns.getServerMoneyAvailable('home') >= upgrade.cost) {
+            switch (upgrade.type) {
+                case 'node':
+                    success = ns.hacknet.purchaseNode() !== -1;
+                    break;
+                case 'level':
+                    success = ns.hacknet.upgradeLevel(upgrade.index, 1);
+                    break;
+                case 'ram':
+                    success = ns.hacknet.upgradeRam(upgrade.index, 1);
+                    break;
+                case 'core':
+                    success = ns.hacknet.upgradeCore(upgrade.index, 1);
+                    break;
             }
         }
 
-        await ns.sleep(config.waitTime);
+        // Status ausgeben
+        ns.clearLog();
+        ns.print(`Nodes: ${totals.nodes}`);
+        ns.print(`Total Level: ${totals.level}/${NETBURNER_REQS.totalLevel}`);
+        ns.print(`Total RAM: ${totals.ram}/${NETBURNER_REQS.totalRam}`);
+        ns.print(`Total Cores: ${totals.cores}/${NETBURNER_REQS.totalCores}`);
+        ns.print('---');
+        ns.print(`Nächstes Upgrade: ${upgrade.type}${upgrade.index !== -1 ? ' (Node ' + upgrade.index + ')' : ''}`);
+        ns.print(`Kosten: ${ns.formatNumber(upgrade.cost)}${success ? ' - Upgrade erfolgreich!' : ''}`);
+
+        await ns.sleep(1000);
     }
 }
