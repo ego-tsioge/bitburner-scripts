@@ -3,18 +3,28 @@
 !.vscode/settings.json
 !.vscode/extensions.json
 .idea/
+*.code-workspace
+
+# Sublime Text
+*.sublime-workspace
+*.sublime-project
 
 # Betriebssystem
 .DS_Store
 Thumbs.db
 
-# Node
-node_modules/
-npm-debug.log*
+# Temporäre Dateien
+*.tmp
+*.log
 
-# Bitburner spezifisch
-*.txt
-NetscriptDefinitions.d.ts 
+# Bitburner Spielstände
+bitburnerSave_*.json.gz
+
+# Backup Dateien
+*~
+*.bak
+*.swp
 
 # Beispiel-Dateien ignorieren
 beispiel*.js
+
