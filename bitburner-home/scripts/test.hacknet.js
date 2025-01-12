@@ -1,17 +1,13 @@
 /**
- * Automatisiert den Aufbau des Hacknet-Netzwerks für die Netburner Faction.
- * Kauft und upgraded Nodes auf kostengünstigste Weise, um die Mindestanforderungen zu erreichen.
- *
- * Netburner Hardware-Anforderungen (Summe aller Nodes):
- * - Level: 100 gesamt
- * - RAM: 8 GB gesamt
- * - Cores: 4 gesamt
- *
- * Hinweis: Hacking-Level (80) wird nicht durch dieses Skript erreicht.
+ * Test-Skript für Hacknet-Automatisierung. Zeigt beste Upgrades an ohne zu kaufen.
+ * Kopiert von mod.hacknet.js mit zusätzlicher ROI-Anzeige.
  *
  * @param {NS} ns - Netscript API
  */
 export async function main(ns) {
+    ns.disableLog('ALL');  // Disable default logging
+    ns.tail();             // Open log window
+
     // Netburner Hardware-Anforderungen
     const NETBURNER_REQS = {
         totalLevel: 100,    // Summe aller Node-Level
@@ -69,21 +65,6 @@ export async function main(ns) {
             for (let i = 0; i < ns.hacknet.numNodes(); i++) {
                 const stats = ns.hacknet.getNodeStats(i);
                 const currentProduction = calculateNodeProduction(stats.level, stats.ram, stats.cores);
-
-                // Level bis 13 auch in Phase 1
-                if (stats.level < 13) {
-                    const levelCost = ns.hacknet.getLevelUpgradeCost(i, 1);
-                    const levelProduction = calculateNodeProduction(stats.level + 1, stats.ram, stats.cores);
-                    const levelROI = (levelProduction - currentProduction) / levelCost;
-                    if (levelROI > bestUpgrade.roi || (levelROI === bestUpgrade.roi && levelCost < bestUpgrade.cost)) {
-                        bestUpgrade = {
-                            type: 'level',
-                            index: i,
-                            cost: levelCost,
-                            roi: levelROI
-                        };
-                    }
-                }
 
                 // RAM Upgrade
                 if (currentTotals.ram < NETBURNER_REQS.totalRam) {
@@ -152,16 +133,6 @@ export async function main(ns) {
         return bestUpgrade;
     }
 
-    // Erste Node kaufen wenn nötig
-    if (ns.hacknet.numNodes() === 0) {
-        const nodeIndex = ns.hacknet.purchaseNode();
-        if (nodeIndex === -1) {
-            ns.tprint('ERROR: Kauf der ersten Hacknet Node fehlgeschlagen (nicht genug Geld?)');
-            return;
-        }
-        ns.print('INFO: Erste Hacknet Node gekauft');
-    }
-
     // Hauptschleife
     while (true) {
         const totals = getCurrentTotals();
@@ -174,36 +145,50 @@ export async function main(ns) {
             break;
         }
 
-        // Beste Upgrade-Option finden und ausführen wenn genug Geld da ist
-        const upgrade = getBestUpgrade(totals);
-        let success = false;
-
-        if (ns.getServerMoneyAvailable('home') >= upgrade.cost) {
-            switch (upgrade.type) {
-                case 'node':
-                    success = ns.hacknet.purchaseNode() !== -1;
-                    break;
-                case 'level':
-                    success = ns.hacknet.upgradeLevel(upgrade.index, 1);
-                    break;
-                case 'ram':
-                    success = ns.hacknet.upgradeRam(upgrade.index, 1);
-                    break;
-                case 'core':
-                    success = ns.hacknet.upgradeCore(upgrade.index, 1);
-                    break;
-            }
-        }
-
         // Status ausgeben
         ns.clearLog();
-        ns.print(`Nodes: ${totals.nodes}`);
-        ns.print(`Total Level: ${totals.level}/${NETBURNER_REQS.totalLevel}`);
-        ns.print(`Total RAM: ${totals.ram}/${NETBURNER_REQS.totalRam}`);
-        ns.print(`Total Cores: ${totals.cores}/${NETBURNER_REQS.totalCores}`);
-        ns.print('---');
-        ns.print(`Nächstes Upgrade: ${upgrade.type}${upgrade.index !== -1 ? ' (Node ' + upgrade.index + ')' : ''}`);
-        ns.print(`Kosten: ${ns.formatNumber(upgrade.cost)}${success ? ' - Upgrade erfolgreich!' : ''}`);
+        ns.print(`Nodes: ${totals.nodes} | Level: ${totals.level}/${NETBURNER_REQS.totalLevel} | RAM: ${totals.ram}/${NETBURNER_REQS.totalRam} | Cores: ${totals.cores}/${NETBURNER_REQS.totalCores}`);
+
+        // Phase und neue Node ROI
+        const phase = (totals.ram < NETBURNER_REQS.totalRam || totals.cores < NETBURNER_REQS.totalCores) ? '1' : '2';
+        const nodeCost = ns.hacknet.getPurchaseNodeCost();
+        const newNodeROI = calculateNodeProduction(1, 1, 1) / nodeCost;
+        ns.print(`Phase ${phase} | Neue Node ROI: ${newNodeROI.toExponential(2)}`);
+
+        // ROIs für jede Node
+        for (let i = 0; i < ns.hacknet.numNodes(); i++) {
+            const stats = ns.hacknet.getNodeStats(i);
+            const currentProduction = calculateNodeProduction(stats.level, stats.ram, stats.cores);
+
+            const levelROI = (calculateNodeProduction(stats.level + 1, stats.ram, stats.cores) - currentProduction) / ns.hacknet.getLevelUpgradeCost(i, 1);
+            const ramROI = (calculateNodeProduction(stats.level, stats.ram * 2, stats.cores) - currentProduction) / ns.hacknet.getRamUpgradeCost(i, 1);
+            const coreROI = (calculateNodeProduction(stats.level, stats.ram, stats.cores + 1) - currentProduction) / ns.hacknet.getCoreUpgradeCost(i, 1);
+
+            ns.print(`Node ${i}: L:${levelROI.toExponential(2)} R:${ramROI.toExponential(2)} C:${coreROI.toExponential(2)}`);
+        }
+
+        // Beste Option
+        const upgrade = getBestUpgrade(totals);
+        if (upgrade) {
+            ns.print(`Beste Option: ${upgrade.type}${upgrade.index !== -1 ? ' (Node ' + upgrade.index + ')' : ''} | Kosten: ${ns.formatNumber(upgrade.cost)} | ROI: ${upgrade.roi.toExponential(2)}`);
+        } else {
+            ns.print('Kein Upgrade verfügbar');
+        }
+
+        // Aktuelle Gesamtproduktion berechnen
+        let totalProduction = 0;
+        for (let i = 0; i < ns.hacknet.numNodes(); i++) {
+            const stats = ns.hacknet.getNodeStats(i);
+            totalProduction += calculateNodeProduction(stats.level, stats.ram, stats.cores);
+        }
+
+        // Lebenszeichen und Wartezeit
+        const signals = ['-', '\\', '|', '/'];
+        const currentMoney = ns.getServerMoneyAvailable('home');
+        const waitTime = upgrade ? Math.max(0, (upgrade.cost - currentMoney) / totalProduction) : 0;
+        const minutes = Math.floor(waitTime / 60);
+        const seconds = Math.floor(waitTime % 60);
+        ns.print(`${signals[Math.floor(Date.now() / 1000) % signals.length]} | Wartezeit: ${minutes}m ${seconds}s`);
 
         await ns.sleep(1000);
     }
