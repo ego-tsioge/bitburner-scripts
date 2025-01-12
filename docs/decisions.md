@@ -146,26 +146,154 @@ Jede Entscheidung folgt diesem Format:
      - Begrenzte Anzahl (20)
      - Nur für aktive Kommunikation
 
-### PDP-003: Modul-Identifikation
-- **Status**: Proposed
+### PDP-003: Modul-Auswahl (Frühe Phase)
+- **Status**: Accepted
 - **Context**: 
   - Spielmechaniken müssen in sinnvolle Module aufgeteilt werden
+  - Verfügbare Spielmechaniken nach Spielfortschritt:
+    
+    Frühe Phase:
+    - Server
+      - Scannen und Analysieren
+      - Hacken (hack/grow/weaken)
+      - Backdoors installieren
+    - Hacknet
+      - Nodes kaufen und upgraden
+    - Programme
+      - Entwickeln (create_program)
+      - Ausführen
+    
+    Mittlere Phase:
+    - Server kaufen und verwalten
+    - Hacknet-Server und Hashes
+    - Factions und Augmentations
+    - Contracts
+    
+    Späte Phase:
+    - Gang Management
+    - Sleeve Management
+  
   - Abhängigkeiten zwischen Mechaniken beachten
   - RAM-Effizienz durch granulare Module
 
+- **Decision**: 
+  - Fokus auf frühe Spielphase
+  - Benötigte Module:
+    - Server
+      - Scannen und Analysieren
+      - Hacken (hack/grow/weaken)
+      - Backdoors installieren
+    - Hacknet
+      - Nodes kaufen und upgraden
+    - Programme
+      - Entwickeln (create_program)
+      - Ausführen
+
+- **Consequences**: 
+  - (+) Klarer Fokus auf essentielle Funktionen
+  - (+) Überschaubare Anzahl Module zu Beginn
+  - (-) Spätere Spielmechaniken erfordern neue PDPs (siehe PDP-006)
+  - (-) Mögliche Restrukturierung bei Phasenübergängen
+
+- **Alternatives**: 
+  1. Alle Phasen direkt umsetzen
+     + Keine späteren Umstrukturierungen
+     + Vollständige Architektur von Anfang an
+     - Hohe initiale Komplexität
+     - Viele ungenutzte Module zu Beginn
+  
+  2. Bedarfsgetriebene Entwicklung
+     + Module erst bei Bedarf entwickeln
+     + Sehr agiler Ansatz
+     - Keine langfristige Planung
+     - Risiko von Inkonsistenzen
+
+### PDP-004: Modul-Umfang
+- **Status**: Proposed
+- **Context**: 
+  - Module aus PDP-003 müssen implementiert werden
+  - Funktionen können unterschiedlich gruppiert werden
+  - Balance zwischen Kohäsion und Komplexität
+
 - **Decision**: TBD
-  - Vorgeschlagene Core-Module:
-    - Spider (Server-Scanning, Contracts)
-    - Hacknet (Node Management)
-    - ServerFarm (Gekaufte Server)
-    - HackManager (Hack/Grow/Weaken)
-    - FactionManager (Reputation, Augments)
 
 - **Consequences**: TBD
 
 - **Alternatives**: 
-  - Gröbere Aufteilung (weniger, größere Module)
-  - Feinere Aufteilung (mehr Spezialisierung)
-  - Dynamische Modulgröße (Zusammenfassen/Aufteilen nach RAM)
+  1. Ein Modul pro Mechanik
+     - Spider
+     - Scanner
+     - Hacking
+     - HacknetNodes
+     - Programs
+     + Maximale Granularität
+     + Sehr fokussierte Module
+     - Mehr Kommunikationsaufwand
+     - Höherer Verwaltungsaufwand
+
+  2. Mechaniken zusammenfassen
+     - ServerManager (Spider, Scan, Hack)
+     - ResourceManager (Hacknet, Programs)
+     + Weniger Kommunikation nötig
+     + Einfachere Verwaltung
+     - Größere Module
+     - Weniger flexibel
+
+### PDP-005: Datenmodell
+- **Status**: Proposed
+- **Context**: 
+  - Module aus PDP-003 müssen implementiert werden
+  - Funktionen können unterschiedlich gruppiert werden
+  - Balance zwischen Kohäsion und Komplexität
+
+- **Decision**: TBD
+
+- **Consequences**: TBD
+
+- **Alternatives**: 
+  1. Ein Modul pro Mechanik
+     - Spider
+     - Scanner
+     - Hacking
+     - HacknetNodes
+     - Programs
+     + Maximale Granularität
+     + Sehr fokussierte Module
+     - Mehr Kommunikationsaufwand
+     - Höherer Verwaltungsaufwand
+
+  2. Mechaniken zusammenfassen
+     - ServerManager (Spider, Scan, Hack)
+     - ResourceManager (Hacknet, Programs)
+     + Weniger Kommunikation nötig
+     + Einfachere Verwaltung
+     - Größere Module
+     - Weniger flexibel
+
+### PDP-006: Mittlere Spielphase
+- **Status**: Postponed
+  - Trigger für diesen PDP:
+    - Genug Geld für erste Server-Käufe
+    - Hacknet-Nodes an Effizienzgrenze
+    - Erste Faction-Einladungen
+    - Contracts werden gefunden
+- **Context**: 
+  - Spielmechaniken werden schrittweise freigeschaltet
+  - Unterschiedliche Anforderungen in verschiedenen Phasen
+  - Offene Spielmechaniken aus PDP-003:
+    
+    Mittlere Phase:
+    - Server kaufen und verwalten
+    - Hacknet-Server und Hashes
+    - Factions und Augmentations
+    - Contracts
+    
+    Späte Phase:
+    - Gang Management
+    - Sleeve Management
+
+- **Decision**: TBD
+- **Consequences**: TBD
+- **Alternatives**: TBD
 
 
