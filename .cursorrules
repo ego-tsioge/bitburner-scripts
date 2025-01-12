@@ -45,8 +45,9 @@ Scripts focus on hacking mechanics, server management, and resource optimization
 """
 
 # Directory structure
-source_path = "/bitburner-home"  # Bitburner home directory für die Scripts
-documentation_path = "/"  # Für README.md, TODO.md etc.
+source_path = "/bitburner-home"     # Bitburner home directory für die Scripts
+root_docs_path = "/"                # Für README.md, TODO.md etc.
+technical_docs_path = "/docs"       # Für technische Dokumentation
 
 # Git conventions
 git_rules = {
