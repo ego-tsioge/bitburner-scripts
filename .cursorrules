@@ -1,20 +1,21 @@
+# Interaction settings
 interaction = {
-    "language" = "deutsch"
-    "style" = "direct"
-    "communication" = [
+    "language": "deutsch",
+    "style": "direct",
+    "communication": [
         "menschlich kommunizieren",
         "prägnante Antworten geben",
         "keine Floskeln verwenden",
-        "Fragen als Interesse verstehen" # Fragen zeigen Interesse am Verständnis
+        "Fragen als Interesse verstehen"  # Fragen zeigen Interesse; zum Verständnis
     ],
-    "question_handling" = {
-        "approach" = [
+    "question_handling": {
+        "approach": [
             "Fragen als Chance zum Lernen sehen",
             "Nicht defensiv reagieren",
             "Quellen und Annahmen transparent machen",
             "Gemeinsam nach bestem Weg suchen"
         ],
-        "response" = [
+        "response": [
             "Quellen nennen",
             "Annahmen erklären",
             "Alternativen aufzeigen",
@@ -25,7 +26,7 @@ interaction = {
 
 # Code handling rules
 code_rules = {
-    "verification" = [
+    "verification": [
         "Informationen vor Änderungen prüfen",
         "Bestehende Codestrukturen bewahren"
     ]
@@ -49,15 +50,35 @@ documentation_path = "/"  # Für README.md, TODO.md etc.
 
 # Git conventions
 git_rules = {
-    "commit_format" = "type: message"
-    "types" = [
+    "commit_format": "type: message",
+    "types": [
         "fix",      # Bugfixes
         "feat",     # neue Features
         "refactor", # Umstrukturierungen
         "docs",     # Dokumentation
         "test",     # Tests
-        "chore"     # Projekt-Infrastruktur, Build-Prozesse, Konfigurationen
-    ]
+        "chore"     # Projekt-Infrastruktur
+    ],
+
+    "analysis_tools": {
+        "handling": [
+            "Nur im Feature-Branch behalten",
+            "Vor Merge in main entfernen",
+            "Erkenntnisse in Commit-Message dokumentieren"
+        ],
+        "examples": [
+            "Strategy-Test Scripts",
+            "Performance-Analyse Tools",
+            "Debugging Helpers"
+        ],
+        "naming": "test.*.js"  # Namenskonvention für Analyse-Tools
+    },
+
+    "test_handling": {
+        "unit_tests": "Permanent im main branch",
+        "analysis_tools": "Nur im Feature branch",
+        "documentation": "Erkenntnisse in Commits/Kommentaren festhalten"
+    }
 }
 
 # Ignore patterns (align with .gitignore)
@@ -71,43 +92,43 @@ exclude_patterns = [
 # Coding style configuration
 formatting_rules = {
     # Global formatting
-    "indent_style" = "tab"
-    "indent_size" = 4
-    "tab_width" = 4
-    "end_of_line" = "lf"
-    "charset" = "utf-8"
-    "trim_trailing_whitespace" = true
-    "insert_final_newline" = true
+    "indent_style": "tab",
+    "indent_size": 4,
+    "tab_width": 4,
+    "end_of_line": "lf",
+    "charset": "utf-8",
+    "trim_trailing_whitespace": true,
+    "insert_final_newline": true,
 
     # Language specific formatting
-    "javascript" = {
-        "quote_type" = "single"
-        "semi" = true
-        "max_line_length" = 80
-        "trailing_comma" = "es5"
-        "bracket_spacing" = true
-        "arrow_parens" = "always"
-        "object_curly_spacing" = true
-    }
+    "javascript": {
+        "quote_type": "single",
+        "semi": true,
+        "max_line_length": 80,
+        "trailing_comma": "es5",
+        "bracket_spacing": true,
+        "arrow_parens": "always",
+        "object_curly_spacing": true
+    },
 
-    "json" = {
-        "indent_style" = "tab"
-        "indent_size" = 4
-    }
+    "json": {
+        "indent_style": "tab",
+        "indent_size": 4
+    },
 
-    "markdown" = {
-        "trim_trailing_whitespace" = false
+    "markdown": {
+        "trim_trailing_whitespace": false
     }
 }
 
 # Learning objectives
 learning_goals = {
-    "primary" = [
+    "primary": [
         "Bitburner Spielmechaniken verstehen",
         "JavaScript/NetScript Programmierung verbessern",
         "Git-Workflow beherrschen"
-    ]
-    "git_skills" = [
+    ],
+    "git_skills": [
         "Branches effektiv nutzen",
         "Saubere Commit-Messages schreiben",
         "Pull Requests erstellen und reviewen",
@@ -117,9 +138,9 @@ learning_goals = {
 
 # Project constraints
 constraints = {
-    "game_ram" = {
-        "initial_limit" = "8GB"
-        "strategy" = [
+    "game_ram": {
+        "initial_limit": "8GB",
+        "strategy": [
             "Module einzeln ausführen",
             "State in localStorage speichern",
             "RAM-Verbrauch pro Skript tracken"
