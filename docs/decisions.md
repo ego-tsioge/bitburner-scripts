@@ -215,7 +215,21 @@ Jede Entscheidung folgt diesem Format:
   - Funktionen können unterschiedlich gruppiert werden
   - Balance zwischen Kohäsion und Komplexität
 
-- **Decision**: TBD
+- **Decision**: 
+  - Server als "Spider"
+    - Server scannen und analysieren
+    - Daten persistent speichern
+    - BIN-Dateien verteilen
+    - NUKE und Backdoors
+  - Hacking als "Scheduler"
+    - Hack/Grow/Weaken planen
+    - BIN-Dateien mit Parametern starten
+    - Optimale Server-Nutzung
+  - Hacknet
+    - Nodes kaufen und upgraden
+  - Programs
+    - Entwickeln (create_program)
+    - Ausführen?
 
 - **Consequences**: TBD
 
@@ -228,16 +242,24 @@ Jede Entscheidung folgt diesem Format:
      - Programs
      + Maximale Granularität
      + Sehr fokussierte Module
+     + Einfach zu testen
+     + Klare Verantwortlichkeiten
      - Mehr Kommunikationsaufwand
      - Höherer Verwaltungsaufwand
+     - Komplexere Koordination
+     - Mehr RAM durch Overhead
 
   2. Mechaniken zusammenfassen
      - ServerManager (Spider, Scan, Hack)
      - ResourceManager (Hacknet, Programs)
      + Weniger Kommunikation nötig
      + Einfachere Verwaltung
+     + Weniger RAM-Overhead
+     + Zentrale Koordination
      - Größere Module
      - Weniger flexibel
+     - Schwerer zu testen
+     - Risiko von Spaghetti-Code
 
 ### PDP-005: Datenmodell
 - **Status**: Proposed
