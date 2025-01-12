@@ -83,18 +83,68 @@ Jede Entscheidung folgt diesem Format:
      - ❌ Ineffizient bei 8GB RAM-Limit
      - ✅ Einfach zu implementieren
 
-### PDP-002: Daten-Management
-- **Status**: Proposed
-- **Context**:
-  - Server-Informationen müssen effizient verwaltet werden
+### PDP-002: Persistenz-Methode
+- **Status**: Accepted
+- **Context**: 
+  - Module benötigen Zugriff auf gemeinsame Daten
   - State muss zwischen Script-Runs persistent sein
-  - Daten müssen zwischen Modulen geteilt werden
-- **Decision**: TBD
-- **Consequences**: TBD
+  - Für Datenpersistenz bietet Bitburner:
+    - localStorage
+    - Dateisystem
+    - Ports
+
+- **Decision**: 
+  - localStorage als primäre Persistenz-Methode
+  - JSON.stringify/parse für Objektspeicherung
+  - Klare Key-Struktur für verschiedene Datentypen
+
+- **Consequences**: 
+  - (+) Einfache, schnelle Implementierung
+  - (+) Gute Performance beim Lesen/Schreiben
+  - (+) Überlebt Browser-Refresh/Spiel-Neustarts
+  - (-) Begrenzte Speichergröße beachten
+  - (-) JSON Konvertierung notwendig
+  - (-) Keine komplexen Queries möglich
+
 - **Alternatives**: 
-  - Direkte Nutzung der Spiel-Objekte
-  - Wrapper-Klassen
-  - Zentrale Datenhaltung 
+  1. localStorage
+     Daten werden im Browser-localStorage gespeichert. Dies ist eine einfache Key-Value Speicherung, die Strings persistent ablegen kann.
+     
+     Vorteile:
+     - Einfache API (setItem/getItem)
+     - Schneller Zugriff
+     - Überlebt Browser-Refresh
+     
+     Nachteile:
+     - Nur Strings (JSON.stringify nötig)
+     - Begrenzte Größe
+     - Keine Struktur/Queries
+
+  2. Dateisystem
+     Bitburner bietet Zugriff auf ein virtuelles Dateisystem, in dem Daten als Textdateien gespeichert werden können.
+     
+     Vorteile:
+     - Unbegrenzte Datenmenge
+     - Strukturierung in Ordnern möglich
+     - Gute Lesbarkeit/Debugging
+     
+     Nachteile:
+     - Langsamer als localStorage
+     - Mehr RAM-Verbrauch
+     - Komplexere API
+
+  3. Ports
+     Bitburner stellt nummerierte Ports für die Kommunikation zwischen Scripts zur Verfügung.
+     
+     Vorteile:
+     - Echtzeitkommunikation möglich
+     - Gut für temporäre Daten
+     - Einfaches Interface
+     
+     Nachteile:
+     - Nicht persistent
+     - Begrenzte Anzahl (20)
+     - Nur für aktive Kommunikation
 
 ### PDP-003: Modul-Identifikation
 - **Status**: Proposed
