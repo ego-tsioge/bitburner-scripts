@@ -2,13 +2,13 @@
 
 ## Projekt Architektur
 - [ ] Project Decision Points finalisieren
+  - [X] PDP-001: Auswahl der Hacking-Strategie
+  - [X] PDP-002: Modul-Architektur
   - [ ] PDP-003: State-Struktur
-    - [ ] networkState implementieren
-    - [ ] playerState implementieren
+    - [X] networkState implementieren
+    - [X] playerState implementieren
     - [ ] processState implementieren
     - [ ] globalState implementieren
-    - [ ] Validitäts-Tracking einbauen
-    - [ ] Timestamp-Management
 
   - [ ] PDP-004: Modul-Kommunikation
     - [ ] State-Zugriffs-Regeln definieren

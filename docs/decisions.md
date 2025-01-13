@@ -272,102 +272,135 @@ const playerState = {
     updateStarted: 1705093603000,    // Zeitstempel wenn Update startet (UTC ms)
     updateCompleted: 1705093603000,  // Zeitstempel wenn Update endet (UTC ms)
 
-    name: "ego-tsioge",              // Spielername
-    money: 0,                        // Verfügbares Geld
+    // Basis-Informationen (ns.getPlayer())
+    name: "ego-tsioge",              // player.name - Spielername
+    money: 0,                        // player.money - Verfügbares Geld
     
-    hp: {
-        current: 100,                // Aktuelle Lebenspunkte
-        max: 100                     // Maximale Lebenspunkte
+    hp: {                            // player.hp - Gesundheitsstatus
+        current: 100,                // .current - Aktuelle HP
+        max: 100                     // .max - Maximum HP
     },
 
+    // Skill-System (ns.getPlayer())
     stats: {
         hacking: {
-            level: 1,                // Hacking-Fähigkeitslevel
-            exp: 0,                  // Gesammelte Hacking-Erfahrung
-            mult: 1.0                // Multiplikator durch Augmentations
+            level: 1,                // player.hacking - Aktuelles Level
+            exp: 0,                  // player.exp.hacking - Gesammelte XP
+            mult: 1.0                // player.mults.hacking - Multiplikator
         },
         strength: {
-            level: 1,                // Stärke-Level für Kampf
-            exp: 0,                  // Gesammelte Stärke-Erfahrung
-            mult: 1.0                // Multiplikator durch Augmentations
+            level: 1,                // player.strength
+            exp: 0,                  // player.exp.strength
+            mult: 1.0                // player.mults.strength
         },
         defense: {
-            level: 1,                // Verteidigungs-Level für Kampf
-            exp: 0,                  // Gesammelte Verteidigungs-Erfahrung
-            mult: 1.0                // Multiplikator durch Augmentations
+            level: 1,                // player.defense
+            exp: 0,                  // player.exp.defense
+            mult: 1.0                // player.mults.defense
         },
         dexterity: {
-            level: 1,                // Geschicklichkeits-Level für Kampf
-            exp: 0,                  // Gesammelte Geschicklichkeits-Erfahrung
-            mult: 1.0                // Multiplikator durch Augmentations
+            level: 1,                // player.dexterity
+            exp: 0,                  // player.exp.dexterity
+            mult: 1.0                // player.mults.dexterity
         },
         agility: {
-            level: 1,                // Beweglichkeits-Level für Kampf
-            exp: 0,                  // Gesammelte Beweglichkeits-Erfahrung
-            mult: 1.0                // Multiplikator durch Augmentations
+            level: 1,                // player.agility
+            exp: 0,                  // player.exp.agility
+            mult: 1.0                // player.mults.agility
         },
         charisma: {
-            level: 1,                // Charisma-Level für Verhandlungen
-            exp: 0,                  // Gesammelte Charisma-Erfahrung
-            mult: 1.0                // Multiplikator durch Augmentations
+            level: 1,                // player.charisma
+            exp: 0,                  // player.exp.charisma
+            mult: 1.0                // player.mults.charisma
         }
     },
 
+    // Hacking-Multiplikatoren (ns.getPlayer().mults)
+    hackingMults: {
+        chance: 1.0,                 // .hacking_chance - Erfolgswahrscheinlichkeit
+        speed: 1.0,                  // .hacking_speed - Ausführungsgeschwindigkeit
+        money: 1.0,                  // .hacking_money - Geldertrag
+        growth: 1.0                  // .hacking_grow - Wachstumsrate
+    },
+
+    // Standort & Arbeit (ns.getPlayer())
     location: {
-        city: "Sector-12",          // Aktuelle Stadt
+        city: "Sector-12",          // player.city - Aktuelle Stadt
         lastCity: "Sector-12",      // Vorherige Stadt für Rückreise
-        location: "Home",           // Spezifischer Ort in der Stadt
+        location: "Home",           // player.location - Spezifischer Ort
         working: {
-            isWorking: false,       // Arbeitet der Spieler gerade?
-            type: null,             // Art der Arbeit (Firma/Faction/etc)
-            description: null       // Details zur aktuellen Arbeit
-        }
+            isWorking: false,       // player.currentWork !== null
+            type: null,             // player.currentWork?.type - Art der Arbeit
+            description: null       // player.currentWork?.description - Details
+        },
+        focus: false                // player.focus - Fokus-Modus aktiv?
     },
 
+    // Zugriffs-Level (ns.getPlayer())
     access: {
         programs: {
-            "BruteSSH.exe": false,   // SSH Port Öffner verfügbar?
-            "FTPCrack.exe": false,   // FTP Port Öffner verfügbar?
-            "relaySMTP.exe": false,  // SMTP Port Öffner verfügbar?
-            "HTTPWorm.exe": false,   // HTTP Port Öffner verfügbar?
-            "SQLInject.exe": false,  // SQL Port Öffner verfügbar?
-            "ServerProfiler.exe": false, // Server-Analyse Tool verfügbar?
-            "DeepscanV1.exe": false,    // Scanner V1 verfügbar?
-            "DeepscanV2.exe": false,    // Scanner V2 verfügbar?
-            "AutoLink.exe": false,      // Auto-Connect Tool verfügbar?
-            "Formulas.exe": false       // Formulas API verfügbar?
+            "BruteSSH.exe": false,   // Verfügbarkeit via ns.fileExists()
+            "FTPCrack.exe": false,   
+            "relaySMTP.exe": false,  
+            "HTTPWorm.exe": false,   
+            "SQLInject.exe": false,  
+            "ServerProfiler.exe": false,
+            "DeepscanV1.exe": false, 
+            "DeepscanV2.exe": false, 
+            "AutoLink.exe": false,   
+            "Formulas.exe": false    
         },
         tix: {
-            api: false,              // Basis-Börsenzugang
-            wse: false,              // World Stock Exchange Zugang
-            fourSigma: false,        // 4S Marktdaten Zugang
-            fourSigmaApi: false      // 4S API Zugang
+            api: false,              // player.hasTixApiAccess - Basis-Börsenzugang
+            wse: false,              // player.hasWseAccount - World Stock Exchange Zugang
+            fourSigma: false,        // player.has4SData - 4S Marktdaten Zugang
+            fourSigmaApi: false      // player.has4SDataTixApi - 4S API Zugang
         }
     },
 
+    // Factions (ns.getPlayer())
     factions: {
-        current: [],                // Liste aktiver Factions
-        invites: [],               // Offene Faction-Einladungen
-        reputation: {              
+        current: [],                // player.factions - Aktive Mitgliedschaften
+        invites: [],               // player.factionInvitations - Offene Einladungen
+        reputation: {              // Reputation via ns.getFactionRep() pro Faction           
             "CyberSec": 0,         // Reputation bei CyberSec
             // ... weitere Factions
         }
     },
 
-    resources: {
-        hacknet: {
-            nodes: 0,               // Anzahl Hacknet Nodes
-            production: 0,          // Aktuelle Produktion/Sekunde
-            money: 0                // Gesamteinnahmen
-        },
-        servers: {
-            purchased: [],          // Liste gekaufter Server
-            total: 0,              // Gesamtanzahl Server
-            ram: {
-                max: 0,            // Max RAM pro Server
-                trueMax: 0         // Absolutes RAM Limit
-            }
+    // Hacknet (ns.hacknet.*)
+	hacknet: {
+		nodes: 0,               // numNodes() - Anzahl Nodes
+		production: {
+			current: 0,         // Summe aller getNodeStats(i).production
+			total: 0           // Summe aller getNodeStats(i).totalProduction
+		}
+    },
+
+    // BitNode Informationen
+    bitNode: {
+        current: 1,                // ns.getResetInfo().currentNode
+        multipliers: {             // ns.getBitNodeMultipliers()
+            hackingMoney: 1.0,     // .HackingMoney - Geld-Multiplikator
+            hackingGrowth: 1.0,    // .HackingGrowth - Wachstums-Multiplikator
+            hackingLevel: 1.0,     // .HackingLevelMultiplier - Level-Multiplikator
+            hacknetProduction: 1.0  // .HacknetNodeMoney - Hacknet-Produktion
         }
+    },
+
+    // Spielzeit-Tracking
+    playtime: {
+        total: 0,                  // player.totalPlaytime - Gesamte Spielzeit
+        sinceLastAug: 0,          // ns.getResetInfo().lastAugReset - Zeit seit letztem Aug
+        sinceLastNode: 0          // ns.getResetInfo().lastNodeReset - Zeit seit Node-Reset
+    },
+
+    // Fortschritt & Achievements
+    progress: {
+        peopleKilled: 0,           // player.numPeopleKilled - Getötete NPCs
+        karma: 0,                  // ns.heart.break() - Karma-Wert
+        achievements: [],          // player.achievements - Freigeschaltete Achievements
+        sourceFiles: {}           // player.sourceFileLvl - Freigeschaltete Source Files
     }
 };
 ```
