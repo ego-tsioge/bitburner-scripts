@@ -28,3 +28,6 @@ bitburnerSave_*.json.gz
 # Beispiel-Dateien ignorieren
 beispiel*.js
 
+# Ignoriere test files im main branch
+test.*.js
+

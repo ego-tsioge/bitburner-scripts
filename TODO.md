@@ -1,34 +1,50 @@
 # TODO Liste
 
 ## Projekt Architektur
-- [ ] Project Decision Points ausformulieren
-  - [ ] Modul-Struktur festlegen
-  - [ ] Daten-Management Konzept
-  - [ ] Konfigurations-Strategie
-  - [ ] Error-Handling Philosophie
+- [ ] Project Decision Points finalisieren
+  - [ ] PDP-003: State-Struktur
+    - [ ] networkState implementieren
+    - [ ] playerState implementieren
+    - [ ] processState implementieren
+    - [ ] globalState implementieren
+    - [ ] Validitäts-Tracking einbauen
+    - [ ] Timestamp-Management
 
-- [ ] Modul Struktur
-  - [ ] Core Module identifizieren
-  - [ ] Abhängigkeiten definieren
-  - [ ] Schnittstellen planen
+  - [ ] PDP-004: Modul-Kommunikation
+    - [ ] State-Zugriffs-Regeln definieren
+    - [ ] Versionierung implementieren
+    - [ ] State-Migration konzipieren
 
-- [ ] Daten Management
-  - [ ] Datenstrukturen definieren
-  - [ ] Server Wrapper entwickeln
-  - [ ] State Management konzept
-  - [ ] Persistenz Strategie
+  - [ ] PDP-005: Error-Handling
+    - [ ] Fehlerszenarien dokumentieren
+    - [ ] Recovery-Strategien entwickeln
+    - [ ] Logging-System aufsetzen
 
-- [ ] Konfiguration
-  - [ ] Zentrale Config
-  - [ ] Modul-spezifische Settings
-  - [ ] Runtime Konfiguration
-  - [ ] Default Werte
+  - [ ] PDP-006: Performance-Tracking
+    - [ ] Relevante Metriken identifizieren
+    - [ ] Monitoring implementieren
+    - [ ] Analyse-Tools entwickeln
 
-- [ ] Utilities
-  - [ ] Logging System
-  - [ ] Error Handling
-  - [ ] Performance Monitoring
-  - [ ] Debug Tools
+- [ ] Modul-Struktur (Early Game)
+  - [ ] Spider (Netzwerk-Scanner)
+    - [ ] Server scannen/analysieren
+    - [ ] BIN-Dateien verteilen
+    - [ ] NUKE und Backdoors
+  
+  - [ ] Scheduler (Hacking)
+    - [ ] H/G/W Operationen planen
+    - [ ] Server-Ressourcen optimieren
+    - [ ] Batch-Timing koordinieren
+
+  - [ ] Hacknet
+    - [ ] Nodes kaufen/upgraden
+    - [ ] ROI-Optimierung
+    - [ ] Einnahmen tracken
+
+  - [ ] Programs
+    - [ ] Port-Opener entwickeln
+    - [ ] Tools verwalten
+    - [ ] Fortschritt überwachen
 
 ## Bitburner Automatisierung (entlang des bekannten Spielverlaufs)
 

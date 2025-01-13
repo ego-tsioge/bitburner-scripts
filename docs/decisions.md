@@ -97,82 +97,378 @@ Wechsel von Batching zu Predictive wenn:
    - RAM-Auslastung > 50%
    - Hack-Zeit > 3 Minuten
 
+## PDP-002: Modul-Architektur
+- **Status**: Proposed 
+- **Tags**: architektur, module, design
 
---- alt
-### PDP-001: Grundlegende Architektur
-- **Status**: Proposed
-- **Context**: 
-  - Verschiedene Spielmechaniken müssen automatisiert werden
-  - Projektvorgabe lautet mit 8 GB spielinternem RAM auskommen
+### Kontext und Problemstellung
+Der Home-Server, auf dem die Automatisierung laufen soll, verfügt zu Beginn nur über 8GB RAM. Diese Beschränkung macht es unmöglich, alle benötigten Funktionen gleichzeitig auszuführen. 
 
-- **Decision**: 
-  - Modulare Struktur mit:
-    - main.js als zentraler Orchestrator
-    - Unabhängige Module für Spielmechaniken
-    - Zentraler State für Kommunikation
-    - Gezielte Modul-Ausführung basierend auf State
+Die technische Lösung sieht vor, dass Module nacheinander auf Home ausgeführt werden und jeweils maximal 8GB RAM nutzen dürfen. Zwischen den Modulaufrufen muss der Zustand (State) über localStorage persistiert werden, damit die Module aufeinander aufbauen können. Das Hauptmodul main.js übernimmt dabei die Orchestrierung der anderen Module, welche Daten sammeln, Angriffe steuern und sonstige Aufgaben übernehmen.
 
-- **Consequences**: 
-  - (+) RAM-effizient durch gezielte Modul-Ausführung
-  
-  - (+) Klare, flache Struktur / Klare Aufgabentrennung
-  
-  - (+) Zentrale Kontrolle über Programmablauf
-  
-  - (+) Einfaches Hinzufügen neuer Module
-  
-  - (-) State-Management muss sehr robust sein
-      - Zentrale Fehlerquelle
-      - Soll Modul-Status tracken
-      - localStorage Limitierungen beachten
-  
-  - (-) Abhängigkeit von main.js Entscheidungslogik
-      - Single Point of Failure
-      - Muss alle Spielsituationen abdecken
-      - Komplexität steigt mit Modulanzahl
+Diese Architekturentscheidung wirft die Frage auf, wie die verschiedenen Spielmechaniken sinnvoll in Module aufgeteilt werden können. Die Module müssen dabei nicht nur RAM-effizient sein, sondern auch einen klar definierten Verantwortungsbereich haben und über den persistierten State effektiv zusammenarbeiten.
 
-- **Alternatives**: 
-  1. Event-getriebene Struktur
-     Module agieren völlig autonom und reagieren auf definierte Events im Spiel. Statt einer zentralen Steuerung registriert sich jedes Modul für relevante Events (z.B. "Server gefunden", "Geld verfügbar", "Hack abgeschlossen") und entscheidet selbst, wann es aktiv wird. Die Kommunikation läuft über einen Event-Bus, der Nachrichten zwischen Modulen vermittelt. Dies ermöglicht sehr lose Kopplung und einfache Erweiterbarkeit, macht aber das Systemverhalten schwerer vorhersagbar und das RAM-Management komplexer.
-     
-     Bitburner-Kompatibilität:
-     - ❌ Kein natives Event-System
-     - ❌ Event-Bus müsste über localStorage simuliert werden
-     - ❌ Hoher Overhead durch ständiges Polling
+### Entscheidung
+Für die Early Game Phase werden folgende Module implementiert:
 
-  2. Monolithische Struktur
-     Ein einzelnes, großes Script übernimmt die komplette Steuerung aller Spielmechaniken. Alle Funktionen sind direkt verfügbar und können ohne Kommunikationsoverhead aufgerufen werden. Dies vereinfacht die Koordination und macht den Programmfluss sehr übersichtlich. Allerdings muss das komplette Script immer im RAM gehalten werden, was bei der 8GB Beschränkung problematisch ist. Zudem wird das System mit wachsender Größe schwerer zu warten und zu erweitern.
-     
-     Bitburner-Kompatibilität:
-     - ✅ Technisch möglich
-     - ❌ Nicht praktikabel wegen 8GB RAM-Limit
-     - ✅ Einfach zu implementieren
+1. **main.js**
+   - Orchestriert die Modulaufrufe
+   - Verwaltet den globalen State
+   - Steuert den Spielablauf
+   - Entwickelt benötigte Programme (BruteSSH.exe etc.)
+   - Übernimmt globales Error-Handling
 
-  3. Pipeline-Struktur
-     Die Automatisierung wird als Verarbeitungspipeline organisiert, ähnlich einer Produktionsstraße. Jedes Modul ist eine Verarbeitungsstufe (z.B. Scan->Analyse->Plan->Execute) und gibt seine Ergebnisse an die nächste Stufe weiter. Dies schafft einen sehr klaren, vorhersagbaren Datenfluss. Die starre Struktur macht es jedoch schwierig, auf dynamische Spielsituationen zu reagieren oder parallel laufende Aufgaben zu koordinieren.
-     
-     Bitburner-Kompatibilität:
-     - ❌ Async/Await in Bitburner limitiert
-     - ❌ Keine echte Pipeline möglich
-     - ❌ Blockierendes Verhalten problematisch
+2. **modules/network-spider.js**
+   - Scannt das Netzwerk
+   - Analysiert Server-Eigenschaften
+   - Verwaltet Zugriffsmöglichkeiten (Ports/NUKE)
+   - Deployed H/G/W-Skripte auf gehackte Server
 
-  4. Hierarchische Struktur
-     Module werden in einer Baumstruktur organisiert, wobei übergeordnete Module ihre Untermodule steuern. Zum Beispiel könnte ein "ServerManager" verschiedene Untermodule für Scanning, Hacking und Maintenance koordinieren. Dies ermöglicht gute Skalierbarkeit und klare Verantwortlichkeiten, führt aber zu erhöhtem Overhead durch die mehrschichtige Kommunikation und macht das RAM-Management komplexer.
-     
-     Bitburner-Kompatibilität:
-     - ✅ Technisch möglich
-     - ❌ Verschwendet RAM durch Verwaltungs-Overhead
-     - ❌ Komplexe Koordination bei 8GB Limit schwierig
+3. **modules/hack-manager.js**
+   - Wählt optimale Angriffsziele
+   - Berechnet H/G/W-Parameter
+   - Koordiniert Hack-Operationen
+   - Überwacht Hack-Performance
 
-  5. Round-Robin Scheduling
-     Ein simpler Scheduler durchläuft alle Module in einer festen Reihenfolge und gibt jedem einen definierten Zeitslot. Dies garantiert, dass jedes Modul regelmäßig ausgeführt wird und vereinfacht die Implementierung erheblich. Allerdings wird die verfügbare RAM-Zeit nicht optimal genutzt, da Module auch dann ihren Slot bekommen, wenn sie nichts zu tun haben, während andere dringend Rechenzeit bräuchten.
-     
-     Bitburner-Kompatibilität:
-     - ✅ Technisch möglich
-     - ❌ Ineffizient bei 8GB RAM-Limit
-     - ✅ Einfach zu implementieren
+4. **modules/hacknet-manager.js**
+   - Verwaltet Hacknet-Nodes
+   - Optimiert Upgrades (Level/RAM/Cores)
+   - Berechnet ROI
+   - Trackt Einnahmen
 
-### PDP-002: Persistenz-Methode
+Zusätzlich werden folgende Binary-Scripts benötigt:
+- **bin/hack.js**
+- **bin/grow.js**
+- **bin/weaken.js**
+
+### Konsequenzen
+- **Positiv**
+  - Klare Trennung der Verantwortlichkeiten
+  - RAM-Effizienz durch sequentielle Ausführung
+  - Einfache Erweiterbarkeit für Mid/Late-Game Features
+  - Übersichtliches State-Management
+
+- **Negativ**
+  - Overhead durch häufige Modul-Wechsel
+  - Komplexeres Debugging durch verteilte Ausführung
+  - State-Synchronisation muss sorgfältig gehandhabt werden
+
+### Zurückgestellte Spielmechaniken (Mid/Late-Game)
+Folgende Mechaniken werden in der initialen Version bewusst nicht implementiert, da sie erst im weiteren Spielverlauf relevant werden:
+
+1. **Server-Management**
+   - Kauf und Upgrade eigener Server
+   - Kapazitätsplanung
+   - Server-Farm Optimierung
+
+2. **Factions**
+   - Beitrittskriterien überwachen
+   - Einladungen verwalten
+   - Reputation aufbauen
+   - Augmentations evaluieren/kaufen
+
+3. **Hacknet-Server** (erweiterte Hacknet-Mechanik)
+   - Hash-Generierung
+   - Hash-Upgrade Management
+   - Kapazitätsplanung
+
+4. **Contracts**
+   - Auffinden von Contracts
+   - Automatische Lösung
+   - Reward-Optimierung
+
+5. **Advanced Hacking**
+   - Formulas.exe Integration
+   - Optimierte Batch-Attacks
+   - Predictive Targeting
+
+Diese Mechaniken können in späteren Versionen durch neue Module oder Erweiterung bestehender Module implementiert werden.
+
+## PDP-003: State-Struktur
+- **Status**: Draft
+- **Tags**: state, design, architektur
+
+### Kontext und Problemstellung
+Für die Kommunikation zwischen den Modulen und das Speichern von Zuständen wird eine effiziente State-Struktur benötigt. Dabei müssen verschiedene Datentypen wie Server-Informationen, Hack-Status, Hacknet-Daten und Programm-Fortschritte persistent gespeichert werden. Die Struktur muss sowohl performant als auch wartbar sein und gleichzeitig den limitierten Speicherplatz des localStorage optimal nutzen.
+
+### Entscheidung
+
+Ich sehe Bedarf für folgende Strukturen:
+- networkState
+- serverState
+- playerState
+- processState
+- globalState
+
+Jede Struktur bekommt 2 Timestamps (updateStarted, updateCompleted) und werden bei Aktualisierung der Struktur mit befüllt. Idealer weise haben sie die gleichen Werte. Ein unterschied deutet auf korrupte states hin.
+
+Konventionen:
+- Datenvalidität wird durch Sterne markiert:
+  ** = nur kurzfristig valide (sollte kurfristig vor verwendung erhoben werden)
+  * = ist langfristig valide (zB durch Spieler-Aktionen)
+  kein Stern = ist statisch
+- Timestamps immer in UTC als Unix timestamp in ms.
+
+#### Strukturdefinition für NETWORK STATE
+```javascript
+const networkState = {
+	// Metadaten für State-Validierung
+    updateStarted: 1705093603000,    
+    updateCompleted: 1705093603000,  
+
+    servers: {
+        "n00dles": {                 // Server-Hostname als Key
+            hostname: "n00dles",      // Server-Hostname (server.hostname)
+            ip: "192.168.0.1",       // IP-Adresse des Servers (server.ip)
+            cores: 1,                // Anzahl CPU-Kerne (server.cpuCores)
+            organization: "Noodles",  // Name der Organisation (server.organizationName)
+            isHome: false,           // Ist Home-Server? (hostname === 'home')
+            purchased: false,        // Von Spieler gekauft? (server.purchasedByPlayer)
+            connections: ["home", "foodnstuff"], // Direkte Netzwerkverbindungen (ns.scan())
+            
+            admin: false,            // Root-Rechte vorhanden? (server.hasAdminRights)
+            backdoored: false,       // Backdoor installiert? (server.backdoorInstalled)
+            level: 1,                // Benötigtes Hacking-Level (server.requiredHackingSkill)
+            
+            ram: {
+                used: 0.0,           // Genutztes RAM (server.ramUsed)
+                max: 4.0,            // Verfügbares RAM (home: maxRam - RESERVED_RAM, sonst: maxRam)
+                free: 4.0,           // Freies RAM (max - used)
+                trueMax: 4.0         // Absolutes RAM Maximum (server.maxRam)
+            },
+            
+            power: 2,                // Berechnete aus (Math.max(0, Math.log2(maxRam)))
+            
+            ports: {
+                required: 0,          // Benötigte offene Ports (server.numOpenPortsRequired)
+                openPortCount: 0,     // Anzahl offener Ports (server.openPortCount)
+                ftp: false,           // FTP-Port offen? (server.ftpPortOpen)
+                http: false,          // HTTP-Port offen? (server.httpPortOpen)
+                smtp: false,          // SMTP-Port offen? (server.smtpPortOpen)
+                sql: false,           // SQL-Port offen? (server.sqlPortOpen)
+                ssh: false            // SSH-Port offen? (server.sshPortOpen)
+            },
+            
+            security: {
+                base: 1.0,           // Basis-Sicherheitslevel (server.baseDifficulty)
+                level: 1.0,          // Aktuelles Sicherheitslevel (server.hackDifficulty)
+                min: 1.0             // Minimales Sicherheitslevel (server.minDifficulty)
+            },
+            
+            money: {
+                available: 0.0,      // Aktuell verfügbares Geld (server.moneyAvailable)
+                max: 1750000.0,      // Maximales Geld (server.moneyMax)
+                growth: 3000         // Server-Wachstumsfaktor (server.serverGrowth)
+            }
+        }
+    }
+};
+```
+
+#### Strukturdefinition für PLAYER STATE
+```javascript
+const playerState = {
+	// Metadaten für State-Validierung
+    updateStarted: 1705093603000,    // Zeitstempel wenn Update startet (UTC ms)
+    updateCompleted: 1705093603000,  // Zeitstempel wenn Update endet (UTC ms)
+
+    name: "ego-tsioge",              // Spielername
+    money: 0,                        // Verfügbares Geld
+    
+    hp: {
+        current: 100,                // Aktuelle Lebenspunkte
+        max: 100                     // Maximale Lebenspunkte
+    },
+
+    stats: {
+        hacking: {
+            level: 1,                // Hacking-Fähigkeitslevel
+            exp: 0,                  // Gesammelte Hacking-Erfahrung
+            mult: 1.0                // Multiplikator durch Augmentations
+        },
+        strength: {
+            level: 1,                // Stärke-Level für Kampf
+            exp: 0,                  // Gesammelte Stärke-Erfahrung
+            mult: 1.0                // Multiplikator durch Augmentations
+        },
+        defense: {
+            level: 1,                // Verteidigungs-Level für Kampf
+            exp: 0,                  // Gesammelte Verteidigungs-Erfahrung
+            mult: 1.0                // Multiplikator durch Augmentations
+        },
+        dexterity: {
+            level: 1,                // Geschicklichkeits-Level für Kampf
+            exp: 0,                  // Gesammelte Geschicklichkeits-Erfahrung
+            mult: 1.0                // Multiplikator durch Augmentations
+        },
+        agility: {
+            level: 1,                // Beweglichkeits-Level für Kampf
+            exp: 0,                  // Gesammelte Beweglichkeits-Erfahrung
+            mult: 1.0                // Multiplikator durch Augmentations
+        },
+        charisma: {
+            level: 1,                // Charisma-Level für Verhandlungen
+            exp: 0,                  // Gesammelte Charisma-Erfahrung
+            mult: 1.0                // Multiplikator durch Augmentations
+        }
+    },
+
+    location: {
+        city: "Sector-12",          // Aktuelle Stadt
+        lastCity: "Sector-12",      // Vorherige Stadt für Rückreise
+        location: "Home",           // Spezifischer Ort in der Stadt
+        working: {
+            isWorking: false,       // Arbeitet der Spieler gerade?
+            type: null,             // Art der Arbeit (Firma/Faction/etc)
+            description: null       // Details zur aktuellen Arbeit
+        }
+    },
+
+    access: {
+        programs: {
+            "BruteSSH.exe": false,   // SSH Port Öffner verfügbar?
+            "FTPCrack.exe": false,   // FTP Port Öffner verfügbar?
+            "relaySMTP.exe": false,  // SMTP Port Öffner verfügbar?
+            "HTTPWorm.exe": false,   // HTTP Port Öffner verfügbar?
+            "SQLInject.exe": false,  // SQL Port Öffner verfügbar?
+            "ServerProfiler.exe": false, // Server-Analyse Tool verfügbar?
+            "DeepscanV1.exe": false,    // Scanner V1 verfügbar?
+            "DeepscanV2.exe": false,    // Scanner V2 verfügbar?
+            "AutoLink.exe": false,      // Auto-Connect Tool verfügbar?
+            "Formulas.exe": false       // Formulas API verfügbar?
+        },
+        tix: {
+            api: false,              // Basis-Börsenzugang
+            wse: false,              // World Stock Exchange Zugang
+            fourSigma: false,        // 4S Marktdaten Zugang
+            fourSigmaApi: false      // 4S API Zugang
+        }
+    },
+
+    factions: {
+        current: [],                // Liste aktiver Factions
+        invites: [],               // Offene Faction-Einladungen
+        reputation: {              
+            "CyberSec": 0,         // Reputation bei CyberSec
+            // ... weitere Factions
+        }
+    },
+
+    resources: {
+        hacknet: {
+            nodes: 0,               // Anzahl Hacknet Nodes
+            production: 0,          // Aktuelle Produktion/Sekunde
+            money: 0                // Gesamteinnahmen
+        },
+        servers: {
+            purchased: [],          // Liste gekaufter Server
+            total: 0,              // Gesamtanzahl Server
+            ram: {
+                max: 0,            // Max RAM pro Server
+                trueMax: 0         // Absolutes RAM Limit
+            }
+        }
+    }
+};
+```
+
+#### Strukturdefinition für PROCESS STATE
+```javascript
+const processState = {
+	// Metadaten für State-Validierung
+    updateStarted: 1705093603000,
+    updateCompleted: 1705093603000,  
+
+    processes: {                     // Aktive Prozesse nach PID
+        "1": {
+            filename: "hack.js",     // Name des Script-Files
+            args: ["n00dles"],       // Script-Parameter
+            pid: 1,                  // Prozess-ID
+            server: "home",          // Ausführender Server
+            threads: 1,              // Anzahl Script-Threads
+            ramUsage: 1.6,          // RAM-Verbrauch in GB
+            logs: []                 // Script-Ausgaben
+        }
+    }
+};
+```
+
+#### Strukturdefinition für GLOBAL STATE
+```javascript
+const globalState = {
+	// Metadaten für State-Validierung
+    updateStarted: 1705093603000,
+    updateCompleted: 1705093603000,  
+
+    time: {
+        game: 0,                    // Spielzeit in Millisekunden
+        real: 1705093603000,        // Reale Zeit (UTC)
+        offline: 0,                 // Zeit seit letztem Online
+        lastSave: 1705093603000,    // Letzte Speicherung
+        lastAug: 1705093603000      // Letzte Augmentation
+    },
+
+    bitnode: {
+        number: 1,                  // BitNode Nummer
+        level: 1,                   // BitNode Level
+        multipliers: {
+            hackingMoney: 1.0,      // Geld-Multiplikator für Hacking
+            hackingSpeed: 1.0,      // Geschwindigkeits-Multiplikator
+            // ... weitere Multiplikatoren
+        }
+    },
+
+    achievements: {
+        "BN1": true,               // BitNode 1 abgeschlossen
+        // ... weitere Achievements
+    }
+};
+```
+
+## PDP-004: Modul-Kommunikation
+- **Status**: Draft
+- **Tags**: kommunikation, design, architektur
+
+### Kontext und Problemstellung
+Die Module werden sequentiell ausgeführt und müssen ihre Ergebnisse und Anforderungen untereinander kommunizieren. Dies geschieht über den persistierten State, erfordert aber klare Regeln für Datenzugriff und -modifikation. Zusätzlich muss eine Versionierung des States implementiert werden, um Kompatibilitätsprobleme bei Updates zu vermeiden und eine geordnete Migration zu ermöglichen.
+
+
+## PDP-005: Error-Handling
+- **Status**: Draft
+- **Tags**: fehlerbehandlung, robustheit, design
+
+### Kontext und Problemstellung
+In einem verteilten System mit sequentieller Modulausführung können verschiedene Fehlerszenarien auftreten: korrupter State, Modul-Crashes, Netzwerkfehler oder unerwartete Spielzustände. Es wird ein robustes Error-Handling-System benötigt, das diese Fehler erkennt, behandelt und eine sichere Wiederaufnahme des Betriebs ermöglicht, ohne dass manuelle Eingriffe erforderlich sind.
+
+
+## PDP-006: Performance-Tracking
+- **Status**: Draft
+- **Tags**: monitoring, optimierung, metriken
+
+### Kontext und Problemstellung
+Um die Effizienz der Automatisierung zu messen und zu optimieren, müssen relevante Metriken erfasst und ausgewertet werden. Dies umfasst Hack-Erfolgsraten, Einnahmen-Entwicklung, RAM-Nutzung und Modul-Laufzeiten. Die Herausforderung besteht darin, die richtigen Metriken zu identifizieren, effizient zu speichern und so aufzubereiten, dass daraus Optimierungspotentiale erkannt werden können.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# alte Entscheidungen
+
+### aPDP-002: Persistenz-Methode
 - **Status**: Accepted
 - **Context**: 
   - Module benötigen Zugriff auf gemeinsame Daten
@@ -235,7 +531,7 @@ Wechsel von Batching zu Predictive wenn:
      - Begrenzte Anzahl (20)
      - Nur für aktive Kommunikation
 
-### PDP-003: Modul-Auswahl (Frühe Phase)
+### aPDP-003: Modul-Auswahl (Frühe Phase)
 - **Status**: Accepted
 - **Context**: 
   - Spielmechaniken müssen in sinnvolle Module aufgeteilt werden
@@ -281,7 +577,7 @@ Wechsel von Batching zu Predictive wenn:
 - **Consequences**: 
   - (+) Klarer Fokus auf essentielle Funktionen
   - (+) Überschaubare Anzahl Module zu Beginn
-  - (-) Spätere Spielmechaniken erfordern neue PDPs (siehe PDP-006)
+  - (-) Spätere Spielmechaniken erfordern neue PDPs (siehe aPDP-006)
   - (-) Mögliche Restrukturierung bei Phasenübergängen
 
 - **Alternatives**: 
@@ -297,10 +593,10 @@ Wechsel von Batching zu Predictive wenn:
      - Keine langfristige Planung
      - Risiko von Inkonsistenzen
 
-### PDP-004: Modul-Umfang
+### aPDP-004: Modul-Umfang
 - **Status**: Proposed
 - **Context**: 
-  - Module aus PDP-003 müssen implementiert werden
+  - Module aus aPDP-003 müssen implementiert werden
   - Funktionen können unterschiedlich gruppiert werden
   - Balance zwischen Kohäsion und Komplexität
 
@@ -350,10 +646,10 @@ Wechsel von Batching zu Predictive wenn:
      - Schwerer zu testen
      - Risiko von Spaghetti-Code
 
-### PDP-005: Datenmodell
+### aPDP-005: Datenmodell
 - **Status**: Proposed
 - **Context**: 
-  - Module aus PDP-003 müssen implementiert werden
+  - Module aus aPDP-003 müssen implementiert werden
   - Funktionen können unterschiedlich gruppiert werden
   - Balance zwischen Kohäsion und Komplexität
 
@@ -381,7 +677,7 @@ Wechsel von Batching zu Predictive wenn:
      - Größere Module
      - Weniger flexibel
 
-### PDP-006: Mittlere Spielphase
+### aPDP-006: Mittlere Spielphase
 - **Status**: Postponed
   - Trigger für diesen PDP:
     - Genug Geld für erste Server-Käufe
@@ -391,7 +687,7 @@ Wechsel von Batching zu Predictive wenn:
 - **Context**: 
   - Spielmechaniken werden schrittweise freigeschaltet
   - Unterschiedliche Anforderungen in verschiedenen Phasen
-  - Offene Spielmechaniken aus PDP-003:
+  - Offene Spielmechaniken aus aPDP-003:
     
     Mittlere Phase:
     - Server kaufen und verwalten
