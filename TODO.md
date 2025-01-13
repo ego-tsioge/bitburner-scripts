@@ -10,10 +10,10 @@
     - [-] processState implementieren	// verschoben in spätere Spielphase
     - [X] globalState implementieren
 
-  - [ ] PDP-004: Modul-Kommunikation
-    - [ ] State-Zugriffs-Regeln definieren
-    - [ ] Versionierung implementieren
-    - [ ] State-Migration konzipieren
+  - [-] PDP-004: Modul-Kommunikation   // Obsolet - in PDP-003 integriert
+    - [X] State-Zugriffs-Regeln durch State-Struktur definiert
+    - [X] Versionierung implementiert
+    - [-] State-Migration → Neuer Punkt für Spätphase
 
   - [ ] PDP-005: Error-Handling
     - [ ] Fehlerszenarien dokumentieren
