@@ -7,8 +7,8 @@
   - [ ] PDP-003: State-Struktur
     - [X] networkState implementieren
     - [X] playerState implementieren
-    - [ ] processState implementieren
-    - [ ] globalState implementieren
+    - [-] processState implementieren	// verschoben in spätere Spielphase
+    - [X] globalState implementieren
 
   - [ ] PDP-004: Modul-Kommunikation
     - [ ] State-Zugriffs-Regeln definieren

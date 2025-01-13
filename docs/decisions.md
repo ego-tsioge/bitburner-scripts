@@ -429,8 +429,8 @@ const processState = {
 #### Strukturdefinition für GLOBAL STATE
 ```javascript
 const globalState = {
-	// Metadaten für State-Validierung
-    updateStarted: 1705093603000,
+    // Metadaten für State-Validierung
+    updateStarted: 1705093603000,    
     updateCompleted: 1705093603000,  
 
     time: {
@@ -441,19 +441,60 @@ const globalState = {
         lastAug: 1705093603000      // Letzte Augmentation
     },
 
-    bitnode: {
-        number: 1,                  // BitNode Nummer
-        level: 1,                   // BitNode Level
-        multipliers: {
-            hackingMoney: 1.0,      // Geld-Multiplikator für Hacking
-            hackingSpeed: 1.0,      // Geschwindigkeits-Multiplikator
-            // ... weitere Multiplikatoren
+    // Globale Einstellungen
+    settings: {
+        minSecurityBuffer: 1,        // Sicherheits-Puffer für Hacking
+        minMoneyBuffer: 100000,      // Minimales Geld auf der Bank
+        reservedHomeRam: 4,          // Reserviertes RAM auf home
+        logLevel: 'info'             // Logging Level (debug/info/warn/error)
+    },
+
+    // Aktuelle Ziele/Prioritäten
+    objectives: {
+        primary: 'money',            // Haupt-Fokus (money/rep/hack_xp)
+        target: 'n00dles',          // Aktueller Server-Target
+        hacknet: {
+            enabled: true,           // Hacknet-Automatisierung aktiv?
+            maxSpend: 0.5            // Max. 50% des Geldes für Hacknet
         }
     },
 
-    achievements: {
-        "BN1": true,               // BitNode 1 abgeschlossen
-        // ... weitere Achievements
+    // Script-Status
+    modules: {
+        spider: {
+            lastRun: 0,              // Letzter Scan-Durchlauf
+            interval: 60000          // Scan alle 60 Sekunden
+        },
+        hacknet: {
+            lastRun: 0,
+            interval: 1000
+        }
+        // ... weitere Module
+    },
+
+    phase: {
+        current: 'early',            // Aktuelle Spielphase
+        thresholds: {
+            midGame: {
+                // Mind. eines dieser Kriterien für Mid-Game
+                criteria: {
+                    hackLevel: 100,          // Hacking-Level als Indikator
+                    portOpeners: 2,          // Anzahl verfügbarer Port-Programme
+                    homeRam: 64,             // GB RAM auf Home-Server
+                    purchasedServers: 5      // Anzahl gekaufter Server
+                }
+            },
+            lateGame: {
+                // Mind. eines dieser Kriterien für Late-Game
+                criteria: {
+                    hackLevel: 500,          // Fortgeschrittenes Hacking-Level
+                    portOpeners: 4,          // Mehrere Port-Programme
+                    homeRam: 1024,           // 1TB RAM auf Home
+                    factionRep: true,        // Wichtige Factions erschlossen
+                    augmentations: 5         // Anzahl installierter Augmentations
+                }
+            }
+        }
     }
 };
 ```
