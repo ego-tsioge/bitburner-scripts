@@ -1,94 +1,46 @@
 # TODO Liste
 
-## Projekt Architektur
-- [ ] Project Decision Points finalisieren
+## 1. Projekt Architektur
+- [X] Project Decision Points finalisieren
   - [X] PDP-001: Auswahl der Hacking-Strategie
   - [X] PDP-002: Modul-Architektur
-  - [ ] PDP-003: State-Struktur
-    - [X] networkState implementieren
-    - [X] playerState implementieren
-    - [-] processState implementieren	// verschoben in spätere Spielphase
-    - [X] globalState implementieren
+  - [X] PDP-003: State-Struktur
+  - [X] PDP-004: Modul-Kommunikation   // Obsolet - in PDP-003 integriert
+  - [X] PDP-005: Error-Handling
 
-  - [-] PDP-004: Modul-Kommunikation   // Obsolet - in PDP-003 integriert
-    - [X] State-Zugriffs-Regeln durch State-Struktur definiert
-    - [X] Versionierung implementiert
-    - [-] State-Migration → Neuer Punkt für Spätphase
+## 2. Implementierung
+### Error-Handling System
+- [ ] Error-Handler entwickeln
+  - [ ] Wrapper für Module
+  - [ ] Recovery-Logik
+  - [ ] Logging-System
+    - [ ] Modul-Start/Ende
+    - [ ] Fehler mit Stack-Trace
+    - [ ] Recovery-Versuche
+    - [ ] State-Änderungen
 
-  - [ ] PDP-005: Error-Handling
-    - [ ] Fehlerszenarien dokumentieren
-    - [ ] Recovery-Strategien entwickeln
-    - [ ] Logging-System aufsetzen
+### Module (Early Game)
+- [ ] Spider (Netzwerk-Scanner)
+  - [ ] Server scannen/analysieren
+  - [ ] BIN-Dateien verteilen
+  - [ ] NUKE und Backdoors
 
-  - [ ] PDP-006: Performance-Tracking
-    - [ ] Relevante Metriken identifizieren
-    - [ ] Monitoring implementieren
-    - [ ] Analyse-Tools entwickeln
+- [ ] Scheduler (Hacking)
+  - [ ] H/G/W Operationen planen
+  - [ ] Server-Ressourcen optimieren
+  - [ ] Batch-Timing koordinieren
 
-- [ ] Modul-Struktur (Early Game)
-  - [ ] Spider (Netzwerk-Scanner)
-    - [ ] Server scannen/analysieren
-    - [ ] BIN-Dateien verteilen
-    - [ ] NUKE und Backdoors
-  
-  - [ ] Scheduler (Hacking)
-    - [ ] H/G/W Operationen planen
-    - [ ] Server-Ressourcen optimieren
-    - [ ] Batch-Timing koordinieren
+## 3. Bestandsaufnahme & Optimierung
+- [ ] PDP-006: Performance-Tracking
+  - [ ] Relevante Metriken identifizieren
+  - [ ] Monitoring-Strategie entwickeln
+- [ ] Performance-Analyse
+  - [ ] Metriken erheben
+  - [ ] Bottlenecks identifizieren
+  - [ ] Optimierungspotentiale ermitteln
 
-  - [ ] Hacknet
-    - [ ] Nodes kaufen/upgraden
-    - [ ] ROI-Optimierung
-    - [ ] Einnahmen tracken
-
-  - [ ] Programs
-    - [ ] Port-Opener entwickeln
-    - [ ] Tools verwalten
-    - [ ] Fortschritt überwachen
-
-## Bitburner Automatisierung (entlang des bekannten Spielverlaufs)
-
-### 1. Early Game Progress
-- [ ] Basic Hacking
-  - [ ] Erste Server hacken
-  - [ ] Geld für Hacknet sammeln
-  - [ ] RAM Management
-
-- [ ] Hacknet Optimierung
-  - [x] Netburner Requirements erfüllen
-  - [x] ROI-basierte Entscheidungen
-  - [ ] Geld-Limits einführen
-
-### 2. Server Infrastruktur
-- [ ] Gekaufte Server
-  - [ ] Automatischer Kauf
-  - [ ] Größen-Optimierung
-  - [ ] Skript-Verteilung
-
-- [ ] Gehackte Server
-  - [ ] Automatisches Scannen
-  - [ ] Nuking
-  - [ ] Backdoors
-
-### 3. Hacking Framework
-- [ ] Basis Operationen
-  - [ ] Hack
-  - [ ] Grow
-  - [ ] Weaken
-  - [ ] Batch Timing
-
-- [ ] Target Management
-  - [ ] Server Analyse
-  - [ ] Optimale Ziele finden
-  - [ ] Dynamische Anpassung
-
-### 4. Factions & Augmentations
-- [ ] Faction Management
-  - [ ] Requirements tracken
-  - [ ] Automatisch joinen
-  - [ ] Reputation farmen
-
-- [ ] Augmentation Strategie
-  - [ ] Priorisierung
-  - [ ] Kosten/Nutzen Analyse
-  - [ ] Kauf-Reihenfolge 
+## 4. Nächste Schritte
+- [ ] Mid-Game Features planen
+  - [ ] Server Management
+  - [ ] Factions & Augmentations
+  - [ ] Contracts 
