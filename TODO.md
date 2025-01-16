@@ -19,7 +19,7 @@
     - [ ] Recovery-Versuche
     - [ ] State-Änderungen
 
-### Module (Early Game)
+### Basis-Module
 - [ ] Spider (Netzwerk-Scanner)
   - [ ] Server scannen/analysieren
   - [ ] BIN-Dateien verteilen
@@ -29,6 +29,18 @@
   - [ ] H/G/W Operationen planen
   - [ ] Server-Ressourcen optimieren
   - [ ] Batch-Timing koordinieren
+  - [ ] Server auf definierte Werte bringen
+
+- [X] Basis H/G/W Operationen
+  - [ ] HACK
+  - [ ] GROW
+  - [ ] WEAKEN
+
+### Offene Fragen & Tests
+- [ ] GROW Performance-Test
+  - [ ] Vergleich: Parallele vs Sequentielle Ausführung
+  - [ ] Benötigt: Spider & Batching
+  - [ ] Metriken definieren
 
 ## 3. Bestandsaufnahme & Optimierung
 - [ ] PDP-006: Performance-Tracking
