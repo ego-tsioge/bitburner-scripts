@@ -13,8 +13,8 @@ Jede Entscheidung folgt diesem Format:
 - **Miscellaneous**: Sonstige Informationen, die relevant sein können.
 
 ## PDP-001: Auswahl der Hacking-Strategie
-- Status: accepted 
-- Tags: hacking, strategie, architektur
+- **Status**: Accepted 
+- **Tags**: hacking, strategie, architektur
 
 ### Kontext und Problemstellung
 Ermittlung der effizientesten Hacking-Strategie für frühe und späte Spielphasen in Bitburner. Benötigt wird ein skalierbarer Ansatz, der mit den wachsenden Möglichkeiten im Spielverlauf mitwächst.
@@ -23,7 +23,7 @@ Ermittlung der effizientesten Hacking-Strategie für frühe und späte Spielphas
 Gewählte Option: "Hybrid-Ansatz mit Batching (#1) für frühe Phase und Übergang zu Predictive Targeting (#2)"
 
 ## PDP-002: Modul-Architektur
-- **Status**: Proposed 
+- **Status**: Accepted 
 - **Tags**: architektur, module, design
 
 ### Kontext und Problemstellung
@@ -46,10 +46,10 @@ Für die Early Game Phase werden folgende Module implementiert:
 	- **bin.weaken.js**
 
 ## PDP-003: State-Strukturen
-- Status: accepted
-- Tags: state, design, architektur
+- **Status**: Accepted
+- **Tags**: state, design, architektur
 
-## Kontext und Problemstellung
+### Kontext und Problemstellung
 Für die Kommunikation zwischen den Modulen und das Speichern von Zuständen wird eine effiziente State-Struktur 
 benötigt. 
 
@@ -60,19 +60,21 @@ Konkret werden folgende Strukturen benötigt:
 
 Für das spätere Spiel wird zusätzlich eine Process-State-Struktur für predictive targeting vorgesehen.
 
-## Entscheidung
-Die drei Datenstrukturen sollen wie in [Strukturdefinitionen] beschrieben implementiert werden.
+### Entscheidung
+Die drei Datenstrukturen sollen wie beschrieben implementiert werden.
 
 ## PDP-004: Modul-Kommunikation
-- **Status**: Draft
+- **Status**: Rejected
 - **Tags**: kommunikation, design, architektur
 
 ### Kontext und Problemstellung
-Die Module werden sequentiell ausgeführt und müssen ihre Ergebnisse und Anforderungen untereinander kommunizieren. Dies geschieht über den persistierten State, erfordert aber klare Regeln für Datenzugriff und -modifikation. Zusätzlich muss eine Versionierung des States implementiert werden, um Kompatibilitätsprobleme bei Updates zu vermeiden und eine geordnete Migration zu ermöglichen.
+Die Module werden sequentiell ausgeführt und müssen ihre Ergebnisse und Anforderungen untereinander kommunizieren. Dies geschieht über den persistierten State, erfordert aber klare Regeln für Datenzugriff und -modifikation.
 
+### Entscheidung
+Feststellung: PDP-004 ist schon durch PDP-003 und andere Projektvorgaben erfüllt. Da fest steht das die module nur nacheinander laufen muss die kommunikation nicht weiter geregelt werden um unzulässige Zugriffe zu verhindern.
 
 ## PDP-005: Error-Handling
-- **Status**: Draft
+- **Status**: Accepted
 - **Tags**: fehlerbehandlung, robustheit, design
 
 ### Kontext und Problemstellung

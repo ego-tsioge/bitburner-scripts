@@ -1,8 +1,6 @@
 # PDP-005: Error Handling Konzept
-
-## Status
-- Status: accepted
-- Tags: fehlerbehandlung, robustheit, design
+- **Status**: Accepted
+- **Tags**: fehlerbehandlung, robustheit, design
 
 ## Kontext und Problemstellung
 In einem verteilten System mit sequentieller Modulausführung können verschiedene Fehlerszenarien auftreten: korrupter State, Modul-Crashes, Netzwerkfehler oder unerwartete Spielzustände. Es wird ein robustes Error-Handling-System benötigt, das diese Fehler erkennt, behandelt und eine sichere Wiederaufnahme des Betriebs ermöglicht, ohne dass manuelle Eingriffe erforderlich sind.
@@ -86,7 +84,7 @@ Implementierung eines zentralen Error-Handling-Systems mit folgenden Kernprinzip
   - Folge: Kontrollierter Übergang zur neuen Version
 
 - Inkonsistenter State
-  - Erkennung: updateCompleted Timestamps stimmen nicht überein
+  - Erkennung: ???
   - Aktion: Vollständiges State-Update durchführen
   - Folge: Alle States werden auf aktuellen Stand gebracht
 
