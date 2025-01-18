@@ -1,64 +1,66 @@
-/** Zentraler Handler für Logging und Error-Handling */
+/** Zentraler Handler für Error-Handling und Logging */
 export class Handler {
     /** @param {NS} ns */
     constructor(ns) {
         this.ns = ns;
-        this.LOG_LEVELS = {
-            DEBUG: 0,
-            INFO: 1,
-            WARN: 2,
-            ERROR: 3
+        this.moduleName = ns.getScriptName();
+    }
+
+    /** Zentrale Error-Behandlung */
+    handleError(error) {
+        const context = {
+            // Basis-Info (0.05 GB)
+            module: this.moduleName,
+            host: this.ns.getHostname(),
+            pid: this.ns.pid,
+            args: this.ns.args,
+
+            // Performance (+0.3 GB)
+            scriptRam: this.ns.getScriptRam(this.moduleName),
+            serverRam: {
+                max: this.ns.getServerMaxRam(this.ns.getHostname()),
+                used: this.ns.getServerUsedRam(this.ns.getHostname())
+            },
+            money: this.ns.getServerMoneyAvailable('home'),
+
+            // Player (0.05 GB)
+            hackLevel: this.ns.getHackingLevel(),
+
+            // Error
+            type: error.name || 'Error',
+            message: error.message,
+            stack: error.stack
         };
-        this.currentLogLevel = this.LOG_LEVELS.INFO; // Default
+
+        // Toast-Benachrichtigung (0 GB)
+        if (PRESETS.LOGGING.TOAST_ON_ERROR) {
+            this.ns.toast(`Error in ${this.moduleName}: ${error.message}`, 'error');
+        }
+
+        this.log('ERROR', error.message, context);
     }
 
-    /** Logging mit Levels und Formatierung */
-    log(level, message, data = {}) {
-        if (this.LOG_LEVELS[level] >= this.currentLogLevel) {
-            const timestamp = new Date().toISOString();
-            const logMessage = `[${level}][${timestamp}] ${message}`;
+    /** Logging mit Datei-Output */
+    async log(level, message, data = {}) {
+        const timestamp = new Date().toISOString();
+        const logMessage = `[${level}][${timestamp}] ${message}\n`;
 
-            this.ns.print(logMessage);
-            if (Object.keys(data).length > 0) {
-                this.ns.print(JSON.stringify(data, null, 2));
-            }
+        await this.ns.write(PRESETS.PATHS.LOGS, logMessage, 'a');
+        if (Object.keys(data).length > 0) {
+            await this.ns.write(PRESETS.PATHS.LOGS, JSON.stringify(data, null, 2) + '\n', 'a');
         }
     }
 
-    /** Modul-Ausführung mit Error Handling */
-    async runModule(moduleName, moduleFunction) {
+    /**
+     * Modul-Logik wrappen
+     * @param {Function} moduleLogic - Zu wrappende Funktion
+     * @param {...any} args - Argumente für die Modul-Logik
+     */
+    async wrapModule(moduleLogic, ...args) {
         try {
-            this.log('INFO', `Starting ${moduleName}`);
-            await moduleFunction(this.ns);
-            this.log('INFO', `${moduleName} completed successfully`);
-            return true;
+            return await moduleLogic(...args);
         } catch (error) {
-            this.log('ERROR', `Error in ${moduleName}`, {
-                error: error.message,
-                stack: error.stack,
-                type: error.name
-            });
-
-            // Basic recovery: Retry once
-            try {
-                this.log('WARN', `Retrying ${moduleName}`);
-                await moduleFunction(this.ns);
-                this.log('INFO', `${moduleName} retry successful`);
-                return true;
-            } catch (retryError) {
-                this.log('ERROR', `${moduleName} retry failed`, {
-                    error: retryError.message
-                });
-                return false;
-            }
-        }
-    }
-
-    /** Debug-Level setzen */
-    setLogLevel(level) {
-        if (this.LOG_LEVELS[level] !== undefined) {
-            this.currentLogLevel = this.LOG_LEVELS[level];
-            this.log('INFO', `Log level set to ${level}`);
+            return this.handleError(error);
         }
     }
 }
