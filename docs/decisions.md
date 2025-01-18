@@ -46,19 +46,22 @@ Für die Early Game Phase werden folgende Module implementiert:
 	- **bin.weaken.js**
 
 ## PDP-003: State-Strukturen
-- **Status**: Draft
-- **Tags**: state, design, architektur
+- Status: accepted
+- Tags: state, design, architektur
 
-### Kontext und Problemstellung
-Für die Kommunikation zwischen den Modulen und das Speichern von Zuständen wird eine effiziente State-Struktur benötigt. Dabei müssen verschiedene Datentypen wie Server-Informationen, Hack-Status, Hacknet-Daten und Programm-Fortschritte persistent gespeichert werden. Die Struktur muss sowohl performant als auch wartbar sein und gleichzeitig den limitierten Speicherplatz des localStorage optimal nutzen.
+## Kontext und Problemstellung
+Für die Kommunikation zwischen den Modulen und das Speichern von Zuständen wird eine effiziente State-Struktur 
+benötigt. 
 
-### Entscheidung
+Konkret werden folgende Strukturen benötigt:
+1. **Network State**: Detaillierte Server- und Netzwerkinformationen
+2. **Player State**: Aktuelle Spieler-Attribute und Fortschritte
+3. **Global State**: Kompakter Überblick über systemweite Einstellungen
 
-Ich sehe Bedarf für folgende Strukturen:
-- networkState
-- playerState
-- processState (später)
-- globalState
+Für das spätere Spiel wird zusätzlich eine Process-State-Struktur für predictive targeting vorgesehen.
+
+## Entscheidung
+Die drei Datenstrukturen sollen wie in [Strukturdefinitionen] beschrieben implementiert werden.
 
 ## PDP-004: Modul-Kommunikation
 - **Status**: Draft

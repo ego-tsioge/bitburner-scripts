@@ -1,8 +1,6 @@
 # PDP-002: Modul-Architektur
-
-## Status
-- Status: accepted
-- Tags: architektur, module, design
+- **Status**: Accepted 
+- **Tags**: architektur, module, design
 
 ## Kontext und Problemstellung
 Der Home-Server, auf dem die Automatisierung laufen soll, verfügt zu Beginn nur über 8GB RAM. Diese Beschränkung macht es unmöglich, alle benötigten Funktionen gleichzeitig auszuführen. 
@@ -21,19 +19,20 @@ Für die Early Game Phase werden folgende Module implementiert:
    - Entwickelt benötigte Programme (BruteSSH.exe etc.)
    - Übernimmt globales Error-Handling
 
-2. **mod.network-spider.js**
+2. **mod.net-spider.js**
    - Scannt das Netzwerk
    - Analysiert Server-Eigenschaften
    - Verwaltet Zugriffsmöglichkeiten (Ports/NUKE)
    - Deployed H/G/W-Skripte auf gehackte Server
 
-3. **mod.hack-manager.js**
+3. **mod.hack-scheduler.js**
    - Wählt optimale Angriffsziele
    - Berechnet H/G/W-Parameter
    - Koordiniert Hack-Operationen
    - Überwacht Hack-Performance
 
-4. **mod.hacknet-manager.js**
+4. **mod.hacknet.js**
+   - am anfang nur [Netburner Faction Anforderungen erfüllen]
    - Verwaltet Hacknet-Nodes
    - Optimiert Upgrades (Level/RAM/Cores)
    - Berechnet ROI

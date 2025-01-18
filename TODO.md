@@ -5,7 +5,7 @@
   - [X] PDP-001: Auswahl der Hacking-Strategie
   - [X] PDP-002: Modul-Architektur
   - [X] PDP-003: State-Struktur
-  - [X] PDP-004: Modul-Kommunikation   // Obsolet - in PDP-003 integriert
+  - [-] PDP-004: Modul-Kommunikation   // Obsolet - in PDP-003 integriert
   - [X] PDP-005: Error-Handling
 
 ## 2. Implementierung
@@ -41,6 +41,18 @@
   - [ ] Vergleich: Parallele vs Sequentielle Ausführung
   - [ ] Benötigt: Spider & Batching
   - [ ] Metriken definieren
+
+### Optimierungen für später
+- [ ] Log-System verbessern
+  - [ ] Ringspeicher für In-Memory Logs
+  - [ ] Rotation für wichtige Logs
+  - [ ] Performance-Metriken sammeln
+
+### Log-System
+- [ ] Log-Rotation in main.js Modul-Logik verschieben
+  - [ ] Zeitbasierte Prüfung (z.B. alle 5 Minuten)
+  - [ ] Größen-Check
+  - [ ] Archivierung/Rotation
 
 ## 3. Bestandsaufnahme & Optimierung
 - [ ] PDP-006: Performance-Tracking

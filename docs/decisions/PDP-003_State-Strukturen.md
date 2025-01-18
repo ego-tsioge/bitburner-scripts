@@ -1,51 +1,36 @@
 # PDP-003: State-Strukturen
-
-## Status
-- Status: accepted
-- Tags: state, design, architektur
+- **Status**: Accepted
+- **Tags**: state, design, architektur
 
 ## Kontext und Problemstellung
-Für die Kommunikation zwischen den Modulen und das Speichern von Zuständen wird eine effiziente State-Struktur benötigt. Dabei müssen verschiedene Datentypen wie Server-Informationen, Hack-Status, Hacknet-Daten und Programm-Fortschritte persistent gespeichert werden. Die Struktur muss sowohl performant als auch wartbar sein und gleichzeitig den limitierten Speicherplatz des localStorage optimal nutzen.
-Die Herausforderung liegt dabei in der Notwendigkeit, Spielzustände zwischen Modulaufrufen zu persistieren.
+Für die Kommunikation zwischen den Modulen und das Speichern von Zuständen wird eine effiziente State-Struktur 
+benötigt. 
+
+Konkret werden folgende Strukturen benötigt:
+1. **Network State**: Detaillierte Server- und Netzwerkinformationen
+2. **Player State**: Aktuelle Spieler-Attribute und Fortschritte
+3. **Global State**: Kompakter Überblick über systemweite Einstellungen
+
+Für das spätere Spiel wird zusätzlich eine Process-State-Struktur für predictive targeting vorgesehen.
 
 ## Entscheidung
-Implementierung von drei separaten State-Strukturen:
-- networkState: Server-Informationen und Netzwerk-Topologie
-- playerState: Spieler-Attribute und Fortschritte
-- globalState: Übergreifende Einstellungen und Metriken
-Zur Umsetzung von predictive targeting wird wohl eine zusätzliche processState-Struktur benötigt. 
-
-Jede Struktur erhält Timestamps für Validierung:
-- updateStarted: Timestamp der zum start des updates geschrieben wird
-- updateCompleted: nochmal der gleiche Timestamp, geschrieben zum Update-Ende
+Die drei Datenstrukturen sollen wie in [Strukturdefinitionen] beschrieben implementiert werden.
 
 ## Konsequenzen
 
-### Positive Konsequenzen
-- Klare Zuordnung von Daten zu Verantwortungsbereichen
-- Einfache Erkennung von State-Korruption durch Timestamps
-- Modulare Aktualisierung einzelner State-Bereiche
-- Gute Skalierbarkeit für neue Spielmechaniken
-
-### Negative Konsequenzen
-- Overhead durch Timestamp-Verwaltung
-- Potenzielle Redundanz zwischen States
-- Komplexere State-Verwaltung in main.js
+postponed
 
 ## Strukturdefinitionen
 ### Strukturdefinition für NETWORK STATE
 ```javascript
-const networkState = {
-	// Metadaten für State-Validierung
-    updateStarted: 1705093603000,    
-    updateCompleted: 1705093603000,  
+const networkState = {  
 
     servers: {
         "n00dles": {                 // Server-Hostname als Key
-            hostname: "n00dles",      // Server-Hostname (server.hostname)
+            hostname: "n00dles",     // Server-Hostname (server.hostname)
             ip: "192.168.0.1",       // IP-Adresse des Servers (server.ip)
             cores: 1,                // Anzahl CPU-Kerne (server.cpuCores)
-            organization: "Noodles",  // Name der Organisation (server.organizationName)
+            organization: "Noodles", // Name der Organisation (server.organizationName)
             isHome: false,           // Ist Home-Server? (hostname === 'home')
             purchased: false,        // Von Spieler gekauft? (server.purchasedByPlayer)
             connections: ["home", "foodnstuff"], // Direkte Netzwerkverbindungen (ns.scan())
@@ -92,9 +77,6 @@ const networkState = {
 ### Strukturdefinition für PLAYER STATE
 ```javascript
 const playerState = {
-	// Metadaten für State-Validierung
-    updateStarted: 1705093603000,    // Zeitstempel wenn Update startet (UTC ms)
-    updateCompleted: 1705093603000,  // Zeitstempel wenn Update endet (UTC ms)
 
     // Basis-Informationen (ns.getPlayer())
     name: "ego-tsioge",              // player.name - Spielername
@@ -230,102 +212,27 @@ const playerState = {
 ```
 
 ### Strukturdefinition für PROCESS STATE
-```javascript
-const processState = {
-	// Metadaten für State-Validierung
-    updateStarted: 1705093603000,
-    updateCompleted: 1705093603000,  
-
-    processes: {                     // Aktive Prozesse nach PID
-        "1": {
-            filename: "hack.js",     // Name des Script-Files
-            args: ["n00dles"],       // Script-Parameter
-            pid: 1,                  // Prozess-ID
-            server: "home",          // Ausführender Server
-            threads: 1,              // Anzahl Script-Threads
-            ramUsage: 1.6,          // RAM-Verbrauch in GB
-            logs: []                 // Script-Ausgaben
-        }
-    }
-};
-```
+wegen fehlender Erkenntnisse wird diese Struktur erst später implementiert.
 
 ### Strukturdefinition für GLOBAL STATE
 ```javascript
 const globalState = {
-    // Metadaten für State-Validierung
-    updateStarted: 1705093603000,    
-    updateCompleted: 1705093603000,  
 
 	// Versionierung für alle States
-    versions: {
-        global: "1.0.0",
-        network: "1.0.0",
-        player: "1.0.0",
-        process: "1.0.0"    // für später
-    },
+    version: "1.0.0",
 
-    time: {
-        game: 0,                    // Spielzeit in Millisekunden
-        real: 1705093603000,        // Reale Zeit (UTC)
-        offline: 0,                 // Zeit seit letztem Online
-        lastSave: 1705093603000,    // Letzte Speicherung
-        lastAug: 1705093603000      // Letzte Augmentation
-    },
-
-    // Globale Einstellungen
-    settings: {
-        minSecurityBuffer: 1,        // Sicherheits-Puffer für Hacking
-        minMoneyBuffer: 100000,      // Minimales Geld auf der Bank
-        reservedHomeRam: 4,          // Reserviertes RAM auf home
-        logLevel: 'info'             // Logging Level (debug/info/warn/error)
-    },
+    minSecurityBuffer: 1,        // Sicherheits-Puffer für Hacking
+	minMoneyBuffer: 100000,      // Minimales Geld auf der Bank
+	reservedHomeRam: 8,          // Reserviertes RAM auf home
+	logLevel: 'info'             // Logging Level (debug/info/warn/error)
 
     // Aktuelle Ziele/Prioritäten
     objectives: {
-        primary: 'money',            // Haupt-Fokus (money/rep/hack_xp)
+        focus: 'money',             // Haupt-Fokus (money/rep/hack_xp)
         target: 'n00dles',          // Aktueller Server-Target
         hacknet: {
             enabled: true,           // Hacknet-Automatisierung aktiv?
             maxSpend: 0.5            // Max. 50% des Geldes für Hacknet
-        }
-    },
-
-    // Script-Status
-    modules: {
-        spider: {
-            lastRun: 0,              // Letzter Scan-Durchlauf
-            interval: 60000          // Scan alle 60 Sekunden
-        },
-        hacknet: {
-            lastRun: 0,
-            interval: 1000
-        }
-        // ... weitere Module
-    },
-
-    phase: {
-        current: 'early',            // Aktuelle Spielphase
-        thresholds: {
-            midGame: {
-                // Mind. eines dieser Kriterien für Mid-Game
-                criteria: {
-                    hackLevel: 100,          // Hacking-Level als Indikator
-                    portOpeners: 2,          // Anzahl verfügbarer Port-Programme
-                    homeRam: 64,             // GB RAM auf Home-Server
-                    purchasedServers: 5      // Anzahl gekaufter Server
-                }
-            },
-            lateGame: {
-                // Mind. eines dieser Kriterien für Late-Game
-                criteria: {
-                    hackLevel: 500,          // Fortgeschrittenes Hacking-Level
-                    portOpeners: 4,          // Mehrere Port-Programme
-                    homeRam: 1024,           // 1TB RAM auf Home
-                    factionRep: true,        // Wichtige Factions erschlossen
-                    augmentations: 5         // Anzahl installierter Augmentations
-                }
-            }
         }
     }
 };

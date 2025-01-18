@@ -1,8 +1,6 @@
 # PDP-001: Auswahl der Hacking-Strategie
-
-## Status
-- Status: accepted 
-- Tags: hacking, strategie, architektur
+- **Status**: Accepted 
+- **Tags**: hacking, strategie, architektur
 
 ## Kontext und Problemstellung
 Ermittlung der effizientesten Hacking-Strategie für frühe und späte Spielphasen in Bitburner. Benötigt wird ein skalierbarer Ansatz, der mit den wachsenden Möglichkeiten im Spielverlauf mitwächst.
