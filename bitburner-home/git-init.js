@@ -1,37 +1,70 @@
 /**
  * Lädt alle .js Dateien aus dem bitburner-home Verzeichnis des Repos
  * und setzt Test-Aliase
+ *
  * @param {NS} ns - Netscript API
- * @param {string} [branch] - Optional: Spezifischer Branch
+ * @param {object} ns.flags - Command-line Argumente
+ * @param {boolean} [ns.flags.cleanup=false] - Alle Dateien vor Update löschen
+ * @param {string} [ns.flags.branch=''] - Spezifischer Branch
+ * @param {string[]} [ns.flags._] - Zusätzliche Argumente (erster Eintrag = Branch)
  */
 export async function main(ns) {
-	ns.disableLog('ALL');
-	terminal('clear');
-
 	// GitHub Basis-Konfiguration
 	const GITHUB_USER = 'ego-tsioge';
 	const GITHUB_REPO = 'bitburner-scripts';
 
-	// Optionale Konfiguration
+	// Optionale Konfigurationen
 	const FILTER = {
 		baseDir: 'bitburner-home/',  // Optional: Nur Dateien aus diesem Verzeichnis
 		extension: ['.js']           // Optional: Nur Dateien mit diesen Endungen
 	};
 	const ALIASES = {
-		'update': 'run git-init.js',           // Update aus Default-Branch
-		'test': 'run scripts/test.hacknet.js'  // Test-Script
+		'update': `run ${ns.getScriptName()}`,           // Update aus Default-Branch
+		'test': 'run test/test.hacknet.js',              // Test-Script
+		'cleanup': `run ${ns.getScriptName()} --cleanup` // Cleanup und Update
 	};
 
+	// scriptstart
+	ns.disableLog('ALL');
+	terminal('clear');
+
 	try {
+		// Parameter auswerten
+		const flags = ns.flags([
+			['cleanup', false],
+			['branch', '']
+		]);
+		const branch = flags._.length > 0 ? flags._[0] : flags.branch;
+
+		// Cleanup wenn gewünscht
+		if (flags.cleanup) {
+			ns.tprint('Cleanup aktiviert - lösche alle Dateien...');
+			ns.killall('home', true); // Stoppe alle Skripte
+			const currentScript = ns.getScriptName();
+
+			// Alle Dateien außer dem aktuellen Script löschen
+			const files = ns.ls('home');
+			for (const file of files) {
+				if (file !== currentScript) {
+					try {
+						ns.rm(file);
+						ns.tprint(`✓ Gelöscht: ${file}`);
+					} catch (error) {
+						ns.tprint(`⚠ Konnte ${file} nicht löschen (wahrscheinlich geschützt)`);
+					}
+				}
+			}
+		}
+
 		// Branch bestimmen
-		let branch = ns.args[0];
-		if (!branch) {
-			branch = await findDefaultBranch(ns, GITHUB_USER, GITHUB_REPO);
-			ns.tprint(`Nutze Default-Branch: ${branch}`);
+		let targetBranch = branch;
+		if (!targetBranch) {
+			targetBranch = await findDefaultBranch(ns, GITHUB_USER, GITHUB_REPO);
+			ns.tprint(`Nutze Default-Branch: ${targetBranch}`);
 		}
 
 		// Dateien herunterladen
-		await downloadFiles(ns, GITHUB_USER, GITHUB_REPO, branch, FILTER);
+		await downloadFiles(ns, GITHUB_USER, GITHUB_REPO, targetBranch, FILTER);
 
 		// Prüfe und entferne n00dles script
 		ns.tprint('Bereinige Dateien...');
@@ -53,6 +86,9 @@ export async function main(ns) {
 		}
 
 		ns.tprint('Initialisierung abgeschlossen!');
+		if (flags.cleanup) {
+			ns.tprint('System wurde komplett neu initialisiert.');
+		}
 		ns.tprint('Starte main.js um das System zu aktivieren.');
 
 	} catch (error) {
