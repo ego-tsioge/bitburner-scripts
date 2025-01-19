@@ -80,6 +80,16 @@ Feststellung: PDP-004 ist schon durch PDP-003 und andere Projektvorgaben erfüll
 ### Kontext und Problemstellung
 In einem verteilten System mit sequentieller Modulausführung können verschiedene Fehlerszenarien auftreten: korrupter State, Modul-Crashes, Netzwerkfehler oder unerwartete Spielzustände. Es wird ein robustes Error-Handling-System benötigt, das diese Fehler erkennt, behandelt und eine sichere Wiederaufnahme des Betriebs ermöglicht, ohne dass manuelle Eingriffe erforderlich sind.
 
+### Entscheidung
+Implementierung eines zentralen Error-Handling-Systems mit folgenden Kernprinzipien:
+1. Kritische Fehler (zentral in lib.handler.js):
+   - Korrupter State
+   - RAM-Limitierung
+   - State-Validierung
+2. Nicht-kritische Fehler (lokal per Try-Catch):
+   - Einfaches Exception-Handling
+   - Minimales Logging
+
 ## PDP-006: Performance-Tracking
 - **Status**: Proposed
 - **Tags**: monitoring, optimierung, metriken
