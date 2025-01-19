@@ -1,3 +1,5 @@
+import { PRESETS } from "config.js";
+
 /** Zentraler Handler für Error-Handling und Logging */
 export class Handler {
     /** @param {NS} ns */
@@ -6,50 +8,15 @@ export class Handler {
         this.moduleName = ns.getScriptName();
     }
 
-    /** Zentrale Error-Behandlung */
-    handleError(error) {
-        const context = {
-            // Basis-Info (0.05 GB)
-            module: this.moduleName,
-            host: this.ns.getHostname(),
-            pid: this.ns.pid,
-            args: this.ns.args,
-
-            // Performance (+0.3 GB)
-            scriptRam: this.ns.getScriptRam(this.moduleName),
-            serverRam: {
-                max: this.ns.getServerMaxRam(this.ns.getHostname()),
-                used: this.ns.getServerUsedRam(this.ns.getHostname())
-            },
-            money: this.ns.getServerMoneyAvailable('home'),
-
-            // Player (0.05 GB)
-            hackLevel: this.ns.getHackingLevel(),
-
-            // Error
-            type: error.name || 'Error',
-            message: error.message,
-            stack: error.stack
-        };
-
-        // Toast-Benachrichtigung (0 GB)
-        if (PRESETS.LOGGING.TOAST_ON_ERROR) {
-            this.ns.toast(`Error in ${this.moduleName}: ${error.message}`, 'error');
-        }
-
-        this.log('ERROR', error.message, context);
-    }
-
-    /** Logging mit Datei-Output */
-    async log(level, message, data = {}) {
-        const timestamp = new Date().toISOString();
-        const logMessage = `[${level}][${timestamp}] ${message}\n`;
-
-        await this.ns.write(PRESETS.PATHS.LOGS, logMessage, 'a');
-        if (Object.keys(data).length > 0) {
-            await this.ns.write(PRESETS.PATHS.LOGS, JSON.stringify(data, null, 2) + '\n', 'a');
-        }
-    }
+    // TODO: Kritische Fehler implementieren
+    // - Korrupter State:
+    //   - JSON.parse Fehler erkennen
+    //   - State-Validierung durchführen
+    //   - State-Reset implementieren
+    // - RAM-Limitierung:
+    //   - RAM-Fehler erkennen
+    //   - State auf Inkonsistenzen prüfen
+    //   - Recovery durchführen
 
     /**
      * Modul-Logik wrappen
@@ -62,5 +29,69 @@ export class Handler {
         } catch (error) {
             return this.handleError(error);
         }
+    }
+
+    /**
+     * Fehler-Details sammeln
+     * @param {Error} error - Der aufgetretene Fehler
+     * @returns {Object} Fehler-Details
+     */
+    collectErrorDetails(error) {
+        return {
+            timestamp: new Date().toISOString(),
+            message: error.message || error,
+            source: this.moduleName,
+            ram: this.ns.getScriptRam(this.moduleName),
+            host: this.ns.getHostname(),
+            money: this.ns.getServerMoneyAvailable(this.ns.getHostname())
+        };
+    }
+
+    /**
+     * Fehler formatieren
+     * @param {Object} details - Gesammelte Fehler-Details
+     * @returns {string} Formatierte Fehlermeldung
+     */
+    formatError(details) {
+        return `[${details.timestamp}]
+            Host: ${details.host}
+            Source: ${details.source}
+            RAM Used: ${details.ram}GB
+            Money: ${this.ns.formatNumber(details.money)}
+            Error: ${details.message}`;
+    }
+
+    /**
+     * Fehler mit Kontext loggen
+     * @param {Error} error - Der aufgetretene Fehler
+     * @param {string} [context] - Zusätzlicher Kontext
+     */
+    logError(error, context = '') {
+        const details = this.collectErrorDetails(error);
+        const formattedError = this.formatError(details);
+
+        if (PRESETS.LOGGING.TO_TERMINAL) {
+            this.ns.print(formattedError);
+            if (context) this.ns.print(`Context: ${context}`);
+        }
+
+        if (PRESETS.LOGGING.TO_FILE) {
+            this.ns.write(PRESETS.LOGGING.PATH, formattedError + '\n', 'a');
+            if (context) {
+                this.ns.write(PRESETS.LOGGING.PATH, `Context: ${context}\n`, 'a');
+            }
+        }
+
+        if (PRESETS.LOGGING.TOAST_ON_ERROR) {
+            this.ns.toast(`Error in ${this.moduleName}`, 'error');
+        }
+    }
+
+    /**
+     * Zentrale Fehlerbehandlung
+     * @param {Error} error - Der aufgetretene Fehler
+     */
+    handleError(error) {
+        this.logError(error);
     }
 }
