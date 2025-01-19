@@ -2,9 +2,9 @@
 
 ## Einleitung
 
-###Format
+### Format
 Jede Entscheidung folgt diesem Format:
-- **Status**: Proposed | Accepted | Rejected | Deprecated
+- **Status**: Proposed | Accepted | Rejected | Deprecated | Draft
 - **Tags**: Welche Tags sind relevant für diese Entscheidung?
 - **Context**: Warum müssen wir diese Entscheidung treffen?
 - **Decision**: Was haben wir entschieden?
@@ -80,9 +80,8 @@ Feststellung: PDP-004 ist schon durch PDP-003 und andere Projektvorgaben erfüll
 ### Kontext und Problemstellung
 In einem verteilten System mit sequentieller Modulausführung können verschiedene Fehlerszenarien auftreten: korrupter State, Modul-Crashes, Netzwerkfehler oder unerwartete Spielzustände. Es wird ein robustes Error-Handling-System benötigt, das diese Fehler erkennt, behandelt und eine sichere Wiederaufnahme des Betriebs ermöglicht, ohne dass manuelle Eingriffe erforderlich sind.
 
-
 ## PDP-006: Performance-Tracking
-- **Status**: Draft
+- **Status**: Proposed
 - **Tags**: monitoring, optimierung, metriken
 
 ### Kontext und Problemstellung

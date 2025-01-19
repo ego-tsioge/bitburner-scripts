@@ -1,15 +1,22 @@
 # TODO Liste
 
+## Legende
+- [X] Abgeschlossen
+- [ ] Offen
+- [R] Verworfen (Rejected)
+- [D] Entwurf (Draft) 
+
 ## 1. Projekt Architektur
 - [X] Project Decision Points finalisieren
-  - [X] PDP-001: Auswahl der Hacking-Strategie
-  - [X] PDP-002: Modul-Architektur
-  - [X] PDP-003: State-Struktur
-  - [-] PDP-004: Modul-Kommunikation   // Obsolet - in PDP-003 integriert
-  - [X] PDP-005: Error-Handling
+  - [X] [PDP-001](docs/decisions.md#pdp-001-auswahl-der-hacking-strategie): Auswahl der Hacking-Strategie
+  - [X] [PDP-002](docs/decisions.md#pdp-002-modul-architektur): Modul-Architektur
+  - [X] [PDP-003](docs/decisions.md#pdp-003-state-struktur): State-Struktur
+  - [R] [PDP-004] Modul-Kommunikation   // Obsolet - in PDP-003 integriert
+  - [X] [PDP-005](docs/decisions.md#pdp-005-error-handling): Error-Handling
+  - [ ] [PDP-006](docs/decisions.md#pdp-006-performance-tracking): Performance-Tracking  // Draft - in Bearbeitung
 
 ## 2. Implementierung
-### Error-Handling System
+### Error-Handling System (PDP-005)
 - [ ] Error-Handler entwickeln
   - [ ] Wrapper für Module
   - [ ] Recovery-Logik
@@ -19,7 +26,7 @@
     - [ ] Recovery-Versuche
     - [ ] State-Änderungen
 
-### Basis-Module
+### Basis-Module (PDP-002)
 - [ ] Spider (Netzwerk-Scanner)
   - [ ] Server scannen/analysieren
   - [ ] BIN-Dateien verteilen
@@ -37,13 +44,13 @@
   - [ ] WEAKEN
 
 ### Offene Fragen & Tests
-- [ ] GROW Performance-Test
+- [ ] GROW Performance-Test (PDP-006)
   - [ ] Vergleich: Parallele vs Sequentielle Ausführung
   - [ ] Benötigt: Spider & Batching
   - [ ] Metriken definieren
 
 ### Optimierungen für später
-- [ ] Log-System verbessern
+- [ ] Log-System verbessern (PDP-005, PDP-006)
   - [ ] Ringspeicher für In-Memory Logs
   - [ ] Rotation für wichtige Logs
   - [ ] Performance-Metriken sammeln
@@ -55,7 +62,7 @@
   - [ ] Archivierung/Rotation
 
 ## 3. Bestandsaufnahme & Optimierung
-- [ ] PDP-006: Performance-Tracking
+- [ ] [PDP-006](docs/decisions.md#pdp-006-performance-tracking): Performance-Tracking
   - [ ] Relevante Metriken identifizieren
   - [ ] Monitoring-Strategie entwickeln
 - [ ] Performance-Analyse

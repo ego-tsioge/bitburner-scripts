@@ -12,6 +12,8 @@ Inspirationen gab es bei:
 - https://www.youtube.com/watch?v=85-A4rOJr5A&list=PLbUKWaoZ7R0gWs0RBUUAzpXH_D8QKT1Fs&index=9
 - https://www.reddit.com/r/Bitburner/
 - https://quacksouls.github.io/lyf/hello_README/
+- https://github.com/d0sboots/bitburner
+- https://github.com/jjclark1982/bitburner-scripts/
 
 ## Anforderungen
 
@@ -49,3 +51,14 @@ Die Logik dahinter:
 - `lib.` für code der wiederverwendet wird, quasi bibliotheken
 - `cfg.` für Konfigurationsdateien
 - `test.` für testskripte
+
+## Projektdokumentation
+
+Die Dokumentation ist in mehrere Bereiche aufgeteilt:
+
+- `README.md` - Diese Datei, Projektübersicht und Setup
+- `docs/decisions.md` - übersicht der Architektur- und Design-Entscheidungen (PDPs)
+- `TODO.md` - Aktuelle Aufgaben und Implementierungsstatus
+- `docs/decisions/PDP-*.md` - Detaillierte Entscheidungsdokumente
+
+Alle Architekturentscheidungen werden als "Project Decision Points" (PDPs) dokumentiert und sind über `docs/decisions.md` zugänglich.
