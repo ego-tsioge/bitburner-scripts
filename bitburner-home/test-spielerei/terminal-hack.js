@@ -1,3 +1,7 @@
+/** @typedef {import("/types/NetscriptDefinitions").NS} NS */
+
+
+
 /** @param {NS} ns */
 export async function main(ns) {
     ns.disableLog('sleep');
@@ -6,7 +10,7 @@ export async function main(ns) {
     // Terminal Helper
     const terminal = command => {
         const doc = globalThis["document"];
-        const terminalInput = doc.getElementById("terminal-input");
+        const terminalInput = /** @type {HTMLInputElement} */ (doc.getElementById("terminal-input"));
         terminalInput.value = command;
         const handler = Object.keys(terminalInput)[1];
         terminalInput[handler].onChange({ target: terminalInput });

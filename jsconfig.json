@@ -1,0 +1,17 @@
+{
+    "compilerOptions": {
+        "module": "commonjs",
+        "target": "es2021",
+        "baseUrl": ".",
+        "checkJs": true,
+        "paths": {
+            "/*": ["*"],
+            "scripts/*": ["bitburner-home/scripts/*"]
+        },
+        "typeRoots": ["./types"]
+    },
+    "include": [
+        "bitburner-home/**/*",
+        "types/**/*"
+    ]
+}

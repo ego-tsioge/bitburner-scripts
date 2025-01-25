@@ -1,150 +1,121 @@
-# Interaction settings
-interaction = {
-    "language": "deutsch",
-    "style": "direct",
-    "communication": [
-        "menschlich kommunizieren",
-        "prägnante Antworten geben",
-        "keine Floskeln verwenden",
-        "Fragen als Interesse verstehen"  # Fragen zeigen Interesse; zum Verständnis
-    ],
-    "question_handling": {
-        "approach": [
-            "Fragen als Chance zum Lernen sehen",
-            "Nicht defensiv reagieren",
-            "Quellen und Annahmen transparent machen",
-            "Gemeinsam nach bestem Weg suchen"
+{
+    "interaction": {
+        "language": "deutsch",
+        "style": "direct",
+        "communication": {
+            "style": [
+                "communicate naturally",
+                "provide concise answers",
+                "avoid empty phrases",
+                "interpret questions as interest, not as error source or blame"
+            ],
+            "questions": {
+                "default_mode": "answer_only",
+                "assume_intent": "information_seeking",
+                "before_action": {
+                    "must_answer_first": true,
+                    "require_user_confirmation": true,
+                    "steps": [
+                        "provide_direct_answer",
+                        "wait_for_follow_up",
+                        "only_suggest_if_asked"
+                    ]
+                }
+            },
+            "style_rules": {
+                "questions": {
+                    "default_mode": "answer_only",
+                    "assume_intent": "information_seeking",
+                    "before_action": "must_answer_first"
+                },
+                "problem_solving": {
+                    "trigger": "explicit_request",
+                    "require_confirmation": true
+                }
+            }
+        }
+    },
+    "code_handling": {
+        "rules": [
+            "verify information before changes",
+            "preserve existing code structures"
         ],
-        "response": [
-            "Quellen nennen",
-            "Annahmen erklären",
-            "Alternativen aufzeigen",
-            "Offen für Diskussion bleiben"
+        "language": "javascript",
+        "project_type": "game_scripts",
+        "test_framework": "none"
+    },
+    "project": {
+        "description": "Collection of personal JavaScript/NetScript scripts for the programming game Bitburner. These scripts automate various in-game tasks and help manage game progression. Scripts focus on hacking mechanics, server management, and resource optimization.",
+        "paths": {
+            "source": "/bitburner-home",
+            "docs": {
+                "root": "/",
+                "technical": "/docs"
+            }
+        }
+    },
+    "git": {
+        "commit_format": "type: message",
+        "types": {
+            "fix": "bugfixes",
+            "feat": "new features",
+            "refactor": "restructuring",
+            "docs": "documentation",
+            "test": "tests",
+            "chore": "project infrastructure"
+        },
+        "test_handling": {
+            "unit_tests": "permanent in main branch",
+            "analysis_tools": "only in feature branch",
+            "documentation": "record findings in commits/comments"
+        }
+    },
+    "formatting": {
+        "global": {
+            "indent_style": "tab",
+            "indent_size": 4,
+            "tab_width": 4,
+            "end_of_line": "lf",
+            "charset": "utf-8",
+            "trim_trailing_whitespace": true,
+            "insert_final_newline": true
+        },
+        "javascript": {
+            "quote_type": "single",
+            "semi": true,
+            "max_line_length": 80,
+            "trailing_comma": "es5",
+            "bracket_spacing": true,
+            "arrow_parens": "always",
+            "object_curly_spacing": true
+        }
+    },
+    "learning_goals": {
+        "primary": [
+            "understand Bitburner game mechanics",
+            "improve JavaScript/NetScript programming",
+            "master Git workflow"
+        ],
+        "git_skills": [
+            "effectively use branches",
+            "write clean commit messages",
+            "create and review pull requests",
+            "resolve merge conflicts"
         ]
-    }
-}
-
-# Code handling rules
-code_rules = {
-    "verification": [
-        "Informationen vor Änderungen prüfen",
-        "Bestehende Codestrukturen bewahren"
+    },
+    "constraints": {
+        "game_ram": {
+            "initial_limit": "8GB",
+            "strategy": [
+                "execute modules individually",
+                "store state in localStorage"
+            ]
+        }
+    },
+    "exclude_patterns": [
+        "bitburnerSave_*.json.gz",
+        ".git/*",
+        "*.sublime-*",
+        ".vscode/*"
     ]
-}
-
-# Language configuration for Cursor AI
-language = "javascript"
-test_framework = "none"
-project_type = "game_scripts"
-
-# Project description
-description = """
-Collection of personal JavaScript/NetScript scripts for the programming game Bitburner.
-These scripts automate various in-game tasks and help manage game progression.
-Scripts focus on hacking mechanics, server management, and resource optimization.
-"""
-
-# Directory structure
-source_path = "/bitburner-home"     # Bitburner home directory für die Scripts
-root_docs_path = "/"                # Für README.md, TODO.md etc.
-technical_docs_path = "/docs"       # Für technische Dokumentation
-
-# Git conventions
-git_rules = {
-    "commit_format": "type: message",
-    "types": [
-        "fix",      # Bugfixes
-        "feat",     # neue Features
-        "refactor", # Umstrukturierungen
-        "docs",     # Dokumentation
-        "test",     # Tests
-        "chore"     # Projekt-Infrastruktur
-    ],
-
-    "analysis_tools": {
-        "handling": [
-            "Nur im Feature-Branch behalten",
-            "Vor Merge in main entfernen",
-            "Erkenntnisse in Commit-Message dokumentieren"
-        ],
-        "examples": [
-            "Strategy-Test Scripts",
-            "Performance-Analyse Tools",
-            "Debugging Helpers"
-        ],
-        "naming": "test.*.js"  # Namenskonvention für Analyse-Tools
-    },
-
-    "test_handling": {
-        "unit_tests": "Permanent im main branch",
-        "analysis_tools": "Nur im Feature branch",
-        "documentation": "Erkenntnisse in Commits/Kommentaren festhalten"
-    }
-}
-
-# Ignore patterns (align with .gitignore)
-exclude_patterns = [
-    "bitburnerSave_*.json.gz",
-    ".git/*",
-    "*.sublime-*",
-    ".vscode/*"
-]
-
-# Coding style configuration
-formatting_rules = {
-    # Global formatting
-    "indent_style": "tab",
-    "indent_size": 4,
-    "tab_width": 4,
-    "end_of_line": "lf",
-    "charset": "utf-8",
-    "trim_trailing_whitespace": true,
-    "insert_final_newline": true,
-
-    # Language specific formatting
-    "javascript": {
-        "quote_type": "single",
-        "semi": true,
-        "max_line_length": 80,
-        "trailing_comma": "es5",
-        "bracket_spacing": true,
-        "arrow_parens": "always",
-        "object_curly_spacing": true
-    },
-
-    "json": {
-        "indent_style": "tab",
-        "indent_size": 4
-    },
-
-    "markdown": {
-        "trim_trailing_whitespace": false
-    }
-}
-
-# Learning objectives
-learning_goals = {
-    "primary": [
-        "Bitburner Spielmechaniken verstehen",
-        "JavaScript/NetScript Programmierung verbessern",
-        "Git-Workflow beherrschen"
-    ],
-    "git_skills": [
-        "Branches effektiv nutzen",
-        "Saubere Commit-Messages schreiben",
-        "Pull Requests erstellen und reviewen",
-        "Merge-Konflikte lösen"
-    ]
-}
-
-# Project constraints
-constraints = {
-    "game_ram": {
-        "initial_limit": "8GB",
-        "strategy": [
-            "Module einzeln ausführen",
-            "State in localStorage speichern",
-            "RAM-Verbrauch pro Skript tracken"
-        ]
-    }
 }
